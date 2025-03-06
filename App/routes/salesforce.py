@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
+import openai
 from database import get_salesforce_session, get_sf
 
-
+from config import openai_client
 from simple_salesforce import Salesforce, SalesforceAuthenticationFailed
 router = APIRouter()
 
@@ -18,8 +19,8 @@ def refresh_salesforce():
 
 @router.get("/accounts/")
 def get_accounts(sf=Depends(get_sf)):
-    """Récupérer tous les comptes Salesforce."""
-    query = "SELECT Id FROM Warehouse__c "
+    
+    query = "SELECT Id, Name, (SELECT Id, Name FROM Contacts) FROM Account"
     try:
         result = sf.query(query)
         return result["records"]
@@ -33,3 +34,8 @@ def get_accounts(sf=Depends(get_sf)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/generate")
+def generate_response(prompt: str):
+   
+   response = openai_client.invoke(prompt)
+   return {"response": response.content}
