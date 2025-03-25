@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from config import OBJECTS_RELATIONS_FILE_PATH
 from config import FILE_PATH
 from services.openai_service import load_yaml
 from services.openai_service import extract_relevant_objects
@@ -10,7 +11,7 @@ from routes.salesforce import QueryModel
 from routes.salesforce import get_accounts
 from services.openai_service import NaturalLanguageQuery
 from services.openai_service import generate_soql_query
-
+import re
 from fastapi.responses import JSONResponse
 router = APIRouter()
 
@@ -117,3 +118,61 @@ def extract_objects_endpoint(request: QueryRequest):
     schema = load_yaml(FILE_PATH)
     result = extract_relevant_objects(request.query, schema)
     return result          
+
+
+
+
+
+def parse_salesforce_txt(file_path: str) -> dict:
+    schema = {}
+    
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            line = line.strip()
+            if not line:
+                continue  # Ignorer les lignes vides
+
+            parts = line.split(":", 1)  # Séparer l'objet principal des relations
+            object_name = parts[0].strip()
+
+            relations = []
+            if len(parts) > 1:
+                relation_parts = parts[1].split(";")  # Plusieurs relations possibles
+                for relation in relation_parts:
+                    match = re.match(r"(\w+) \((\w+)\)", relation.strip())
+                    if match:
+                        related_object, relation_type = match.groups()
+                        relations.append({
+                            "from": object_name,
+                            "to": related_object,
+                            "type": "Master-Detail" if relation_type == "MD" else "Lookup"
+                        })
+
+            schema[object_name] = {"relations": relations}
+
+    return schema
+
+
+# def load_json_from_txt(file_path: str) -> dict:
+#     """Charge le contenu d'un fichier TXT et le convertit en JSON."""
+#     if not os.path.exists(file_path):
+#         raise HTTPException(status_code=400, detail="Le fichier spécifié n'existe pas.")
+    
+#     try:
+#         with open(file_path, "r", encoding="utf-8") as file:
+#             data = json.load(file)  # Charge le contenu JSON du fichier
+        
+#         return data
+#     except json.JSONDecodeError:
+#         raise HTTPException(status_code=400, detail="Format JSON invalide dans le fichier.")
+
+
+@router.post("/extract-objects")
+def extract_objects(request: QueryRequest):
+    """Endpoint pour extraire les objets Salesforce depuis un fichier texte."""
+   
+    schema = load_yaml(OBJECTS_RELATIONS_FILE_PATH)
+    result = extract_relevant_objects(request.query, schema)
+    
+   
+    return {"extracted_data": result}
