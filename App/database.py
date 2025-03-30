@@ -1,6 +1,6 @@
 import requests
 from simple_salesforce import Salesforce, SalesforceAuthenticationFailed
-from config import USERNAME, PASSWORD, CONSUMER_KEY, CONSUMER_SECRET, TOKEN_URL
+from App.config import USERNAME, PASSWORD, CONSUMER_KEY, CONSUMER_SECRET, TOKEN_URL
 
 def get_salesforce_session():
     """Obtenir un token d'accès OAuth2 et l'instance URL de Salesforce."""

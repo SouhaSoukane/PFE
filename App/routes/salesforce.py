@@ -2,9 +2,9 @@ import json
 from fastapi import APIRouter, HTTPException, Depends, Query
 import openai
 import pandas as pd
-from database import get_salesforce_session, get_sf
+from App.database import get_salesforce_session, get_sf
 from fastapi.responses import JSONResponse
-from config import openai_client
+from App.config import openai_client
 from simple_salesforce import Salesforce, SalesforceAuthenticationFailed
 from pydantic import BaseModel
 router = APIRouter()

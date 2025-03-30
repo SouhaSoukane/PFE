@@ -1,15 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from config import FILE_PATH
-from services.openai_service import load_yaml
-from services.openai_service import extract_relevant_objects
-from services.openai_service import evaluate_and_fix_soql_query
+from App.config import FILE_PATH
+from App.services.openai_service import load_yaml
+from App.services.openai_service import extract_relevant_objects
+from App.services.openai_service import evaluate_and_fix_soql_query
 
-from services.openai_service import generate_natural_response
-from routes.salesforce import QueryModel
-from routes.salesforce import get_accounts
-from services.openai_service import NaturalLanguageQuery
-from services.openai_service import generate_soql_query
+from App.services.openai_service import generate_natural_response
+from App.routes.salesforce import QueryModel
+from App.routes.salesforce import get_accounts
+from App.services.openai_service import NaturalLanguageQuery
+from App.services.openai_service import generate_soql_query
 
 from fastapi.responses import JSONResponse
 router = APIRouter()

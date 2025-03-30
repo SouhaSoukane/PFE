@@ -3,8 +3,8 @@ import os
 from fastapi import FastAPI
 from pydantic import BaseModel
 import openai
-from routes.salesforce import clean_soql_response, get_accounts
-from config import openai_client, FILE_PATH
+from App.routes.salesforce import clean_soql_response, get_accounts
+from App.config import openai_client, FILE_PATH
 
 from fastapi.responses import JSONResponse
 
