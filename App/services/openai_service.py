@@ -5,10 +5,11 @@ from pydantic import BaseModel
 import openai
 from App.routes.salesforce import clean_soql_response, get_accounts
 from App.config import openai_client, FILE_PATH
-
+from datetime import datetime
 from fastapi.responses import JSONResponse
+import re
 
-
+from App.services.exemples import SOQL_EXAMPLES, detect_example_need
 
 # Configuration de LangSmith
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -29,86 +30,110 @@ def load_yaml(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return f.read()
 
+
+def get_current_datetime():
+    now = datetime.now()
+    return {"datetime": now}
 # Fonction pour extraire les objets et champs pertinents
-import re
 
 def extract_relevant_objects(natural_language_query: str, schema: dict) -> dict:
-    system_message = (
-        "Tu es un expert en Salesforce et SOQL.\n"
-        "Ton objectif est d'identifier **obligatoirement** au moins un objet et ses relations "
-        "dans le schéma Salesforce fourni pour répondre à la question de l'utilisateur.\n\n"
-
-        "📌 **Règles obligatoires** :\n"
-        "- **Retourne UNIQUEMENT un JSON valide et strictement structuré, sans texte explicatif.**\n"
-        "- **NE JAMAIS** inclure d'introduction, d'explication ou de conclusion.\n"
-        "- **Ne mets JAMAIS de balises de code (` ```json ... ``` `).**\n"
-        "- **Si aucun objet exact ne correspond, trouve un objet similaire et explique ton choix DANS LE JSON.**\n\n"
-
-        "📌 **Format attendu (sans texte avant ou après)** :\n"
-        "{\n"
-        '  "objects": ["Object1__c", "Object2__c"],\n'
-        '  "relations": [{"from": "Object1__c", "to": "Object2__c", "type": "Lookup", "field": "RelationField__c"}],\n'
-        '  "fields": {"Object1__c": ["Field1__c", "Field2__c"], "Object2__c": ["FieldA__c"]}\n'
-        "}\n\n"
-
-        "📌 **Schéma Salesforce fourni** :\n"
-        f"{json.dumps(schema, indent=2)}\n"
-        " **Ne JAMAIS ajouter un champ absent du schéma**. Si un champ demandé est introuvable, retourne une erreur JSON dans la réponse."
-"Ne jamais extraire un objet par défaut (Fallback_Object__c)."
-
-"Si aucun objet valide n'est identifié, répondre explicitement que l'extraction a échoué au lieu d'ajouter un objet fictif."
-
-"Toujours vérifier si l'objet extrait existe dans EntityDefinition."
-
-"Si l'objet extrait n'existe pas, renvoyer une erreur d'extraction et demander une vérification du schéma."
-    )
-
-    messages = [
-        {"role": "system", "content": system_message},
+    """
+    Étape 1 : Comprendre le besoin utilisateur
+    Étape 2 : Identifier les objets Salesforce pertinents
+    Étape 3 : Générer les relations + champs
+    """
+    # Étape 1 : Résumer l'intention de l'utilisateur
+    step1_messages = [
+        {"role": "system", "content": "Tu es un assistant Salesforce. Résume en une phrase claire ce que l'utilisateur cherche à faire, sans ajouter d'interprétation personnelle."},
         {"role": "user", "content": natural_language_query}
     ]
+    step1_response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=step1_messages,
+        temperature=0.2
+    ).choices[0].message.content.strip()
 
-    response = openai_client.chat.completions.create(
-        model="gpt-4o",
-        messages=messages,
+    print("\n🔎 Étape 1 - Intention résumée :", step1_response)
+
+    # Étape 2 : Identifier les objets à partir de l’intention + schéma
+    step2_prompt = (
+        "Tu es un expert en Salesforce et SOQL.\n"
+        "À partir de l'intention suivante, identifie les objets pertinents du schéma.\n"
+        "Ne retourne qu'un JSON strict comme décrit. Si aucun objet n'est valide, retourne une erreur explicite JSON.\n\n"
+        f"📥 Intention : {step1_response}\n"
+        f"📦 Schéma :\n{json.dumps(schema, indent=2)}\n\n"
+        "📤 Format attendu :\n"
+        "{\n"
+        '  "objects": ["Object1__c", "Object2__c"],\n'
+        '  "reasoning": "Explication du choix des objets (obligatoire)",\n'
+        '  "errors": null\n'
+        "}\n"
+    )
+    step2_messages = [
+        {"role": "system", "content": step2_prompt}
+    ]
+    step2_response_text = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=step2_messages,
         temperature=0.2,
         max_tokens=500
-    )
+    ).choices[0].message.content.strip()
 
-    response_text = response.choices[0].message.content.strip()
-
-    # 🔍 Debugging : Affichage brut de la réponse
-    print("\n📥 Réponse brute de l'IA :", response_text)
-
-    # 📌 Extraire uniquement la partie JSON si l’IA ajoute du texte explicatif
-    json_match = re.search(r"\{.*\}", response_text, re.DOTALL)
-    if json_match:
-        response_text = json_match.group(0)
-
-    # 🔥 Suppression des balises de code ```json ... ```
-    response_text = response_text.strip("```json").strip("```").strip()
+    print("\n🧩 Étape 2 - Objets identifiés :", step2_response_text)
 
     try:
-        extracted_data = json.loads(response_text)
-    except json.JSONDecodeError:
-        print("\n❌ Erreur : Impossible de parser la réponse JSON de l'IA. Tentative de correction...")
+        step2_json = json.loads(re.search(r"\{.*\}", step2_response_text, re.DOTALL).group(0))
+    except:
+        print("❌ Erreur lors du parsing JSON.")
+        return {"objects": [], "relations": [], "fields": {}}
 
-        # 🔄 Tentative de récupération d'un JSON valide en coupant les erreurs
-        response_text = response_text.split("}\n")[0] + "}"  # Supprime les éventuelles coupures
-        try:
-            extracted_data = json.loads(response_text)
-        except json.JSONDecodeError:
-            print("\n❌ Échec de la correction, retour à une valeur par défaut.")
-            return {"objects": [], "relations": [], "fields": {}}
+    if not step2_json.get("objects"):
+        print("❌ Aucun objet extrait.")
+        return {"objects": [], "relations": [], "fields": {}}
 
-    # ✅ Vérifier si des objets ont bien été trouvés
-    if not extracted_data.get("objects"):
-        print("\n❌ Aucune donnée extraite !")
-        extracted_data = {"objects": ["Fallback_Object__c"], "relations": [], "fields": {"Fallback_Object__c": ["Id"]}}
+    # Étape 3 : Générer les relations et champs à partir des objets extraits
+    selected_objects = step2_json["objects"]
+    step3_prompt = (
+    "Tu es un expert Salesforce. À partir de l’intention utilisateur et des objets extraits du schéma, identifie uniquement les **champs et relations pertinents** pour répondre au besoin.\n"
+    "⚠️ Tu dois te baser uniquement sur les champs et relations **existants dans le schéma**.\n"
+    "❗️N’inclus que les éléments directement utiles pour répondre à l’intention, ne liste pas tout ce qui est disponible.\n\n"
+    f"🎯 Intention : {step1_response}\n"
+    f"📄 Objets : {selected_objects}\n"
+    f"📦 Schéma :\n{json.dumps(schema, indent=2)}\n\n"
+    "📤 Format attendu :\n"
+    "{\n"
+    '  "relations": [{"from": "Object1__c", "to": "Object2__c", "type": "Lookup", "field": "RelationField__c"}],\n'
+    '  "fields": {\n'
+    '    "Object1__c": ["Champ1__c", "Champ2__c"],\n'
+    '    "Object2__c": ["ChampA__c"]\n'
+    "  }\n"
+    "}"
+     )
 
-    print("\n🔍 Objets et relations extraits :", extracted_data)
+    step3_response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "system", "content": step3_prompt}],
+        temperature=0.2,
+        max_tokens=500
+    ).choices[0].message.content.strip()
 
-    return extracted_data
+    print("\n🔗 Étape 3 - Relations et champs :", step3_response)
+
+    try:
+        step3_json = json.loads(re.search(r"\{.*\}", step3_response, re.DOTALL).group(0))
+    except:
+        print("❌ Parsing JSON échoué à l'étape 3.")
+        return {"objects": selected_objects, "relations": [], "fields": {}}
+
+    # Combiner résultats
+    final_result = {
+        "intention":step1_response,
+        "objects": selected_objects,
+        "relations": step3_json.get("relations", []),
+        "fields": step3_json.get("fields", {})
+    }
+
+    return final_result
 
 def correct_soql_relations(soql_query: str, extracted_data: dict) -> str:
     """
@@ -131,63 +156,115 @@ def correct_soql_relations(soql_query: str, extracted_data: dict) -> str:
 
     return soql_query
 
+import re
+
+def correct_datetime_format(soql_query: str, datetime_fields: list) -> str:
+    # Regex pour matcher les dates au format YYYY-MM-DD (sans T00:00:00Z) uniquement
+    pattern = r"\b({})\s*([<>=!]+)\s*'?(?!\d{{4}}-\d{{2}}-\d{{2}}T)(\d{{4}}-\d{{2}}-\d{{2}})'?".format("|".join(map(re.escape, datetime_fields)))
+    
+    def replacer(match):
+        field, operator, date = match.groups()
+        return f"{field} {operator} {date}T00:00:00Z"
+
+    return re.sub(pattern, replacer, soql_query)
 
 
-# Fonction pour générer la requête SOQL
 def generate_soql_query(natural_language_query: str) -> str:
     schema = load_yaml(FILE_PATH)
+    current_time = datetime.now()
+    current_year = current_time.year
+    current_month = current_time.month
+    current_day = current_time.day
+    current_date_str = current_time.strftime("%Y-%m-%d")
 
-    # 🔍 Extraction des objets, relations et champs
     extracted_data = extract_relevant_objects(natural_language_query, schema)
 
     if not extracted_data["objects"]:
         print("\n❌ Aucun objet pertinent trouvé.")
         return "Erreur : Aucun objet pertinent trouvé."
 
-    # 🔄 Construction du prompt pour la génération de SOQL
-    system_message = (
-    "Tu es un assistant expert en SOQL.\n"
-    "Génère une requête SOQL **strictement valide** pour Salesforce en utilisant les objets et relations fournis.\n"
-    "🚨 **Règles** :\n"
-    "- Utilise UNIQUEMENT les objets et champs suivants :\n"
-    f"{json.dumps(extracted_data['fields'], indent=2)}\n"
-    "- Relations disponibles :\n"
-    f"{json.dumps(extracted_data['relations'], indent=2)}\n"
-    "- Ne crée pas de champs ou relations inexistants.\n"
-    "Si un champ est de type DateTime, les valeurs doivent être au format YYYY-MM-DDTHH:MM:SSZ."
+    # # ➕ Détection dynamique des exemples
+    # examples_needed = detect_example_need(natural_language_query,extracted_data)
+    # # 🖨️ Affichage des exemples nécessaires dans la console
+    # print("\n📌 Exemples détectés comme nécessaires :")
+    # for key in examples_needed:
+    #  print(f" - {key}")
+    # example_snippets = ""
+    # if examples_needed:
+    #     example_snippets += "\n🧾 Exemples pertinents :\n"
+    #     for key in examples_needed:
+    #         for ex in SOQL_EXAMPLES.get(key, []):
+    #             example_snippets += f"- {ex}\n"
 
-"Exemple :"
+    # 🧠 Construction du prompt
+    system_message = f"""
+⭐️ Tu es un expert Salesforce spécialisé dans l'écriture de requêtes SOQL complexes, **exécutables** et **optimisées**.
 
-"❌ WHERE PaymentDate__c >= '2023-01-01'"
+🎯 Objectif : Génère une requête SOQL **parfaitement valide**, **optimisée** et **strictement conforme** aux objets, relations et champs fournis ci-dessous.
 
-"✅ WHERE PaymentDate__c >= 2023-01-01T00:00:00Z"
-    ### Exemple Lookup :
-"SELECT Id, Name FROM Warehouse__c WHERE Account__c IN (SELECT Id FROM Account WHERE Name = 'Distributeur 1')"
-    "- La requête doit être **directement exécutable** sur Salesforce.\n"
-    "- **Retourne uniquement la requête SOQL** (pas de texte explicatif).\n"
-)
+🔐 Contraintes INCONTOURNABLES :
 
+1. ⚠️ Tu ne peux utiliser **que les champs et relations fournis** dans les blocs `📐 Relations disponibles` et `🧾 Champs disponibles`.  
+   ❌ N’invente **jamais** un champ ou une relation (ex : `fullName` ou `PromotionalPrograms__r` si non listés).
+
+2. ✅ Si le champ ou la relation semble exister logiquement mais **n’est pas listé**, **ne l’utilise pas**. Tu dois alors reformuler la requête pour **rester strictement dans ce qui est autorisé**.
+
+3. 🚫 Tu ne peux **jamais traverser plus d’un niveau de relation** par champ :
+   - Interdiction : `Relation1__r.Relation2__r.Field` ❌
+   - Autorisé : `Relation1__r.Field` ✅
+
+4. ✅ Si tu dois accéder à une relation enfant, utilise une **sous-requête** (`parent-to-child`) avec **le nom exact de la relation enfant** tel que fourni.
+🔁 Sous-requêtes (relations enfant) :
+
+- Lorsque tu fais une sous-requête (parent-to-child), **utilise uniquement le nom exact** de la relation enfant fourni dans `📐 Relations disponibles`.
+- ⚠️ Si tu ne trouves pas de relation enfant correspondant à ce que demande l'utilisateur, **tu ne dois pas générer la requête**.
+- ✅ Exemple correct : `(SELECT Name FROM Contacts)` uniquement si `Contacts` est bien une relation enfant de l'objet de départ.
+- ❌ N'invente jamais de noms comme `PromotionalPrograms__r` si ce nom n’apparaît pas **exactement** dans la liste des relations enfant de l’objet courant (ex : `POS__c`).
+
+5. 🔍 Si un champ personnalisé est utilisé, **il doit se terminer par `__c`**, et une relation personnalisée par `__r`. Ne fais jamais d’erreur de suffixe.
+
+6. 🧠 Règle d’or : Si l’utilisateur demande une info présente **directement sur un objet**, ne complexifie pas la requête inutilement.
+
+7. 🎯 Ne retourne **que** la requête SOQL **dans un bloc de code `soql`**, sans texte, explication ou caractère en plus.
+
+---
+
+📅 Date actuelle : {current_date_str}
+
+📐 Relations disponibles :
+{json.dumps(extracted_data['relations'], indent=2)}
+
+🧾 Champs disponibles :
+{json.dumps(extracted_data['fields'], indent=2)}
+"""
+
+    if "intention" in extracted_data:
+     intention_summary = extracted_data["intention"]
+    else:
+    # Gérer le cas où l'intention est absente
+     intention_summary = "Intention non définie"
+    user_message = f"{intention_summary}\n\n{natural_language_query}"
+
+    # Préparation des messages pour l'API
     messages = [
         {"role": "system", "content": system_message},
-        {"role": "user", "content": natural_language_query}
+        {"role": "user", "content": user_message}
     ]
+   
 
     response = openai_client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=messages,
         temperature=0.2,
         max_tokens=300
     )
 
     soql_query = response.choices[0].message.content.strip()
+    soql_query = soql_query.strip("```soql").strip("```").strip()
 
-    # 🚨 Suppression des balises de code ```sql ... ```
-    soql_query = soql_query.strip("```sql").strip("```").strip()
-
-    # 🚨 Correction automatique des relations mal formées
     soql_query = correct_soql_relations(soql_query, extracted_data)
-
-    # Debugging: Affichage de la requête SOQL générée
+    datetime_fields = ["IssuedDate__c", "CreatedDate__c", "LastOrderDate__c", "PaymentDate__c", "Date__c", "ActualVisitDate__c", "PlannedVisitDate__c"]
+    soql_query = correct_datetime_format(soql_query, datetime_fields)
     print("\n✅ Requête SOQL générée :")
     print(soql_query)
 
@@ -257,8 +334,8 @@ def generate_natural_response(nl_query: str, results: list) -> str:
         "- Si aucun résultat n'est trouvé, informe l'utilisateur avec une phrase polie.\n\n"
         "Voici un exemple :\n"
         "**Question :** Qui est le commercial le plus performant ?\n"
-        "**Réponse brute :** Jean Dupont (ID: 1), Chiffre d'affaires : 500K€\n"
-        "**Réponse reformulée :** Le commercial le plus performant est Jean Dupont, avec un chiffre d'affaires de 500 000 euros.\n\n"
+        "**Réponse brute :** Jean Dupont (ID: 1), Chiffre d'affaires : 500000DZD\n"
+        "**Réponse reformulée :** Le commercial le plus performant est Jean Dupont, avec un chiffre d'affaires de 500 000 DZD.\n\n"
         "Ne retourne que la réponse reformulée et rien d'autre."
     )
 
