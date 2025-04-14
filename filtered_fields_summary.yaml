@@ -1,6 +1,5 @@
-Account (Distributor):
+Account :(Distributeur)
 - fullname: Name
-  type: Text
 - fullName: Active__c
   type: Checkbox
 - fullName: Address__c
@@ -12,6 +11,7 @@ Account (Distributor):
 - fullName: InternalDistributor__c
   type: Checkbox
 AgentPayment__c:
+- fullName: Name
 - Child Relationship Name: Agent_Payments
 - fullName: Agent__c
   referenceTo: Contact
@@ -20,6 +20,7 @@ AgentPayment__c:
 - fullName: SubmittedAmount__c
   type: Currency
 Category__c:
+- fullName: Name
 - Child Relationship Name: Category
 - fullName: Code__c
   type: Text
@@ -30,6 +31,7 @@ Category__c:
 - fullName: Parent__c
   referenceTo: Category__c
 Contact (Agent): 
+- fullName: Name
 - Child Relationship Name: Agents
 - fullName: Active__c
   type: Checkbox
@@ -46,6 +48,7 @@ Contact (Agent):
 - fullName: Warehouse__c
   referenceTo: Warehouse__c
 DeliveryItem__c:
+- fullName: Name
 - Child Relationship Name: DeliveryItems
 - fullName: Delivery__c
   referenceTo: Delivery__c
@@ -64,7 +67,8 @@ DeliveryItem__c:
 - fullName: UseDefaultUnit__c
   type: Checkbox
 Delivery__c: 
-Child Relationship Name: Deliveries
+- fullName: Name
+- Child Relationship Name: Deliveries
 - fullName: Address__c
   type: Text
 - fullName: Agent__c
@@ -90,7 +94,8 @@ Child Relationship Name: Deliveries
 - fullName: Visit__c
   referenceTo: Visit__c
 Goal__c:
-Child Relationship Name: Goals
+- fullName: Name
+- Child Relationship Name: Goals
 - fullName: Agent__c
   referenceTo: Contact 
 - fullName: EndDate__c
@@ -112,7 +117,8 @@ Child Relationship Name: Goals
 - fullName: Type__c
   type: Picklist
 InventoryMovement__c:
-Child Relationship Name: Inventory_movements
+- fullName: Name
+- Child Relationship Name: Inventory_movements
 - fullName: Code__c
   type: AutoNumber
 - fullName: Destination__c
@@ -132,7 +138,8 @@ Child Relationship Name: Inventory_movements
 - fullName: UOM__c
   referenceTo: UOM__c
 InvoiceItem__c:
-Child Relationship Name: InvoiceItems
+- fullName: Name
+- Child Relationship Name: InvoiceItems
 - fullName: FreeQTY__c
   type: Number
 - fullName: Invoice__c
@@ -162,7 +169,8 @@ Child Relationship Name: InvoiceItems
 - fullName: UOM__c
   referenceTo: UOM__c
 Invoice__c:
-Child Relationship Name: Invoices
+- fullName: Name
+- Child Relationship Name: Invoices
 - fullName: Agent__c
   referenceTo: Contact
 - fullName: DueDate__c
@@ -221,7 +229,8 @@ Loading__c:
 - fullName: Status__c
   type: Picklist
 OrderItem__c: 
-Child Relationship Name: OrderItems
+- fullName: Name
+- Child Relationship Name: OrderItems
 - fullName: AllocatedQTY__c
   type: Number
 - fullName: CancelledQTY__c
@@ -257,6 +266,7 @@ Child Relationship Name: OrderItems
 - fullName: useDefaultUnit__c
   type: Checkbox
 Order__c:
+- fullName: Name
 - Child Relationship Name: Orders
 - fullName: Closed__c
   type: Checkbox
@@ -307,6 +317,7 @@ Order__c:
 - fullName: Visit__c
   referenceTo: Visit__c
 POSContact__c:
+- fullName: Name
 - Child Relationship Name: Contacts_POS
 - fullName: Email__c
   type: Email
@@ -315,6 +326,7 @@ POSContact__c:
 - fullName: POS__c
   referenceTo: POS__c
 POS__c:
+- fullName: Name
 - Child Relationship Name: POSs
 - fullName: Active__c
   type: Checkbox
@@ -345,6 +357,7 @@ POS__c:
 - fullName: Type__c
   type: Picklist
 PaymentGroup__c:
+- fullName: Name
 - Child Relationship Name: Payment_Groups
 - fullName: Agent__c
   referenceTo: Contact
@@ -355,6 +368,7 @@ PaymentGroup__c:
 - fullName: POS__c
   referenceTo: POS__c
 Payment__c:
+- fullName: Name
 - Child Relationship Name: Payments
 - fullName: Agent__c
   referenceTo: Contact
@@ -371,6 +385,7 @@ Payment__c:
 - fullName: Visit__c
   referenceTo: Visit__c
 PriceList__c:
+- fullName: Name
 - fullName: Active__c
   type: Checkbox
 - fullName: DiscountPolicy__c
@@ -378,6 +393,7 @@ PriceList__c:
 - fullName: Standard__c
   type: Checkbox
 PriceRule__c:
+- fullName: Name
 - Child Relationship Name: Price_Rules
 - fullName: Active__c
   type: Checkbox
@@ -424,6 +440,7 @@ ProductInventory__c:
 - fullName: UOM__c
   type: Text
 ProductVariant__c:
+- fullName: Name
 - Child Relationship Name: Variantes_d_articles1
 - fullName: Active__c
   type: Checkbox
@@ -470,6 +487,7 @@ Product__c:
 - fullName: Weight__c
   type: Number
 PromotionalProgram__c:
+- fullName: Name
 - fullName: ActiveDate__c
   type: Checkbox
 - fullName: Active__c
@@ -481,6 +499,7 @@ PromotionalProgram__c:
 - fullName: Type__c
   type: Picklist
 ReceptionItem__c:
+- fullName: Name
 - Child Relationship Name: Reception_Items
 - fullName: CompletedQTY__c
   type: Number
@@ -497,6 +516,7 @@ ReceptionItem__c:
 - fullName: UseDefaultUOM__c
   type: Checkbox
 Reception__c:
+- fullName: Name
 - fullName: Date__c
   type: DateTime
 - fullName: Destination__c
@@ -508,6 +528,7 @@ Reception__c:
 - fullName: Status__c
   type: Picklist
 Reward__c:
+- fullName: Name
 - Child Relationship Name: Rewards
 - fullName: ApplyOn__c
   type: Picklist
@@ -530,6 +551,7 @@ Reward__c:
 - fullName: RewardType__c
   type: Picklist
 RoutePlan__c:
+- fullName: Name
 - Child Relationship Name: RoutePlans
 - fullName: Active__c
   type: Checkbox
@@ -558,6 +580,7 @@ RoutePlan__c:
 - fullName: Wednesday__c
   type: Checkbox
 Rule__c:
+- fullName: Name
 - Child Relationship Name: Rules
 - fullName: ApplyOn__c
   type: Picklist
@@ -576,6 +599,7 @@ Rule__c:
 - fullName: TaxIncluded__c
   type: Checkbox
 Slot__c:
+- fullName: Name
 - Child Relationship Name: Slots
 - fullName: Active__c
   type: Checkbox
@@ -594,6 +618,7 @@ Slot__c:
 - fullName: Warehouse__c
   referenceTo: Warehouse__c
 Taxe__c:
+- fullName: Name
 - fullName: Amount__c
   type: Percent
 - fullName: FixedAmount__c
@@ -603,12 +628,14 @@ Taxe__c:
 - fullName: TaxeCalculation__c
   type: Picklist
 TerritoryPromo__c:
+- fullName: Name
 - Child Relationship Name: TerritoriesPromos
 - fullName: PromotionalProgram__c
   referenceTo: PromotionalProgram__c
 - fullName: Territory__c
   referenceTo: Territory__c
 Territory__c:
+- fullName: Name
 - Child Relationship Name: Territories
 - fullName: Active__c
   type: Checkbox
@@ -619,6 +646,7 @@ Territory__c:
 - fullName: Type__c
   type: Picklist
 TransferItem__c:
+- fullName: Name
 - Child Relationship Name: TransfertItems
 - fullName: ProductVariant__c
   referenceTo: ProductVariant__c
@@ -657,6 +685,7 @@ Transfer__c:
   referenceTo: Unloading__c
   Child Relationship Name: Transfers
 UOM__c:
+- fullName: Name
 - Child Relationship Name: Unit_s_de_mesure
 - fullName: BaseUnit__c
   type: Checkbox
@@ -669,6 +698,7 @@ UOM__c:
 - fullName: Type__c
   type: Picklist
 UnloadingItem__c:
+- fullName: Name
 - Child Relationship Name: UnloadingItems
 - fullName: ProductVariant__c
   referenceTo: ProductVariant__c
@@ -679,6 +709,7 @@ UnloadingItem__c:
 - fullName: UOM__c
   referenceTo: UOM__c
 Unloading__c:
+- fullName: Name
 - fullName: Date__c
   type: Date
 - fullName: Destination__c
@@ -692,12 +723,14 @@ Unloading__c:
 - fullName: Status__c
   type: Picklist
 UserTerritoryAssignement__c:
+- fullName: Name
 - Child Relationship Name: UserTerritoryAssignment
 - fullName: Territory__c
   referenceTo: Territory__c
 - fullName: User__c
   referenceTo: User
 Van__c:
+- fullName: Name
 - Child Relationship Name: Vans
 - fullName: AcquisitionYear__c
   type: Date
@@ -718,6 +751,7 @@ Van__c:
 - fullName: Warehouse__c
   referenceTo: Warehouse__c
 Visit__c:
+- fullName: Name
 - Child Relationship Name: Visit
 - fullName: ActualVisitDate__c
   type: DateTime
@@ -738,9 +772,10 @@ Visit__c:
 - fullName: Type__c
   type: Picklist
 Warehouse__c:
+- fullName: Name
 - Child Relationship Name: Warehouses
 - fullName: Account__c 
-  referenceTo: Account (Distributor)
+  referenceTo: Account 
 - fullName: Active__c
   type: Checkbox
 - fullName: Address__c

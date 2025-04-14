@@ -49,9 +49,10 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
     """
     try:
         soql_query = generate_soql_query(nl_query.query)
+
         query_model = QueryModel(query=soql_query)  
         results = get_accounts(query_model)  # Retourne un JSONResponse
-
+        
         # ✅ Vérifier si `results` est un JSONResponse et extraire son contenu
         if isinstance(results, JSONResponse):
             results = json.loads(results.body.decode())  # Décoder correctement
@@ -67,7 +68,16 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
         return {"error": str(e)}
 
 
-  
+@router.post("/assistant")
+async def assistant_api(nl_query: NaturalLanguageQuery):
+    """
+    Prend une requête en langage naturel, génère une requête SOQL, puis retourne les résultats.
+    """
+    
+    response = generate_soql_query(nl_query.query)      
+    return {"response": response}
+    
+    
 
 
 @router.post("/query/evaluate")

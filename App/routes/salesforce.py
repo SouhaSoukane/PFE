@@ -72,8 +72,10 @@ def get_accounts(query_data: QueryModel):
             print("🔍 Aucune donnée trouvée dans Salesforce.")
             return JSONResponse(content={"message": "Aucune donnée trouvée"}, status_code=404)
 
+        # Nettoyer les attributs inutiles
         cleaned_records = [{k: v for k, v in record.items() if k != "attributes"} for record in records]
         
+        # Créer le DataFrame
         df = pd.DataFrame(cleaned_records)
 
         if df.empty:
@@ -82,8 +84,11 @@ def get_accounts(query_data: QueryModel):
 
         print("\n🔹 Aperçu du DataFrame :\n", df.head())
 
-        return JSONResponse(content=df.to_dict(orient="records"), status_code=200)
-    
+        # 🔥 Conversion propre via to_json -> JSON compliant
+        json_compatible_data = json.loads(df.to_json(orient="records", force_ascii=False))
+
+        return JSONResponse(content=json_compatible_data, status_code=200)
+
     except SalesforceAuthenticationFailed:
         print("🔑 Échec d'authentification Salesforce, tentative de reconnexion...")
         refresh_salesforce()
@@ -93,7 +98,7 @@ def get_accounts(query_data: QueryModel):
             return [{k: v for k, v in record.items() if k != "attributes"} for record in records]
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erreur après rafraîchissement : {str(e)}")
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur SOQL : {str(e)}")
 
