@@ -44,9 +44,9 @@ class SessionHandler:
      elif nb_question > 4:
         nb_question = 0
     #  estimate_token_count(self.messages) > MAX_TOKENS_CONTEXT:
-    #     print("⚠️ Contexte trop long, réinitialisation.")
-    #     self.reset()
-    #     self.messages.append({"role": "system", "content": system_prompt})
+        print("⚠️ Contexte trop long, réinitialisation.")
+        self.reset()
+        self.messages.append({"role": "system", "content": system_prompt})
 
     def append_user_question(self, content: str):
         # Seules les vraies questions utilisateur vont dans l'historique
