@@ -202,17 +202,24 @@ def correct_soql_relations(soql_query: str, extracted_data: dict) -> str:
 
     return soql_query
 
-import re
-
 def correct_datetime_format(soql_query: str, datetime_fields: list) -> str:
-    # Regex pour matcher les dates au format YYYY-MM-DD (sans T00:00:00Z) uniquement
+    """
+    Corrige uniquement les comparaisons sur les champs de type DateTime dans une requête SOQL.
+    Si la date est au format 'YYYY-MM-DD' sans T, elle sera convertie en 'YYYY-MM-DDT00:00:00Z'
+    uniquement pour les champs spécifiés comme DateTime.
+    """
+    # On trie par longueur inversée pour éviter les collisions (ex: Date__c vs MyDate__c)
+    datetime_fields = sorted(datetime_fields, key=len, reverse=True)
+
+    # Construit une expression qui matche tous les champs DateTime
     pattern = r"\b({})\s*([<>=!]+)\s*'?(?!\d{{4}}-\d{{2}}-\d{{2}}T)(\d{{4}}-\d{{2}}-\d{{2}})'?".format("|".join(map(re.escape, datetime_fields)))
-    
+
     def replacer(match):
         field, operator, date = match.groups()
         return f"{field} {operator} {date}T00:00:00Z"
 
     return re.sub(pattern, replacer, soql_query)
+
 def generate_soql_query(natural_language_query: str) -> str:
     
     current_time = datetime.now()
@@ -318,7 +325,16 @@ WHERE Account__r.Name LIKE '%Numilog%'
     soql_query = soql_query.strip("```soql").strip("```").strip()
 
     soql_query = correct_soql_relations(soql_query, extracted_data)
-    datetime_fields = ["IssuedDate__c", "CreatedDate__c", "LastOrderDate__c", "PaymentDate__c", "Date__c", "ActualVisitDate__c", "PlannedVisitDate__c"]
+    datetime_fields = [
+    "Loading__c.Date__c",
+    "Reception__c.Date__c",
+    "IssuedDate__c",
+    "CreatedDate__c",
+    "LastOrderDate__c",
+    "PaymentDate__c",
+    "ActualVisitDate__c",
+    "PlannedVisitDate__c"
+]
     soql_query = correct_datetime_format(soql_query, datetime_fields)
     soql_query = correct_soql_query(soql_query, extracted_data)
     print("\n✅ Requête SOQL générée :")
