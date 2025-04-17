@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from App.config import FILE_PATH
-from App.services.openai_service import load_yaml
+from App.services.openai_service import load_yaml, refine_soql_query
 from App.services.openai_service import extract_relevant_objects
 from App.services.openai_service import evaluate_and_fix_soql_query
 
@@ -21,7 +21,9 @@ class SOQLRequest(BaseModel):
 class QueryRequest(BaseModel):
     query: str
 
-
+    
+     
+schema = load_yaml(FILE_PATH)
 
 @router.post("/generate_soql")
 def generate_soql(request: SOQLRequest):
@@ -41,32 +43,52 @@ def generate_soql(request: SOQLRequest):
     soql_query = generate_soql_query(request.natural_query)
     return {"soql_query": soql_query}
 import json
-
 @router.post("/query")
 async def process_natural_language_query(nl_query: NaturalLanguageQuery):
-    """
-    Prend une requête en langage naturel, génère une requête SOQL, puis retourne les résultats.
-    """
+    extracted_data = extract_relevant_objects(nl_query.query, schema)
+
+    if not extracted_data["objects"]:
+        print("\n❌ Aucun objet pertinent trouvé.")
+        return {"error": "Aucun objet pertinent trouvé."}
+
     try:
-        soql_query = generate_soql_query(nl_query.query)
+        soql_query = generate_soql_query(extracted_data)
+        query_model = QueryModel(query=soql_query)
 
-        query_model = QueryModel(query=soql_query)  
-        results = get_accounts(query_model)  # Retourne un JSONResponse
-        
-        # ✅ Vérifier si `results` est un JSONResponse et extraire son contenu
+        retry_count = 0
+        while retry_count < 3:
+            try:
+                results = get_accounts(query_model)
+                # retry_count= 3
+                break  # ✅ Succès => on sort de la boucle
+            except Exception as e:
+                print(f"❌ Erreur d'exécution (tentative {retry_count + 1}) :", str(e))
+                retry_count += 1
+
+                corrected_soql = refine_soql_query(
+                    extracted_data=extracted_data,
+                    original_soql=query_model.query,
+                    execution_error=str(e)
+                )
+                query_model = QueryModel(query=corrected_soql)
+        else:
+            # 🚨 Toutes les tentatives ont échoué
+            return {"error": "Erreur après plusieurs tentatives d'exécution."}
+
+        # ✅ Résultat valide
         if isinstance(results, JSONResponse):
-            results = json.loads(results.body.decode())  # Décoder correctement
-
-            # Si le JSON contient une clé "message" (ex: "Aucune donnée trouvée"), retourner une liste vide
+            results = json.loads(results.body.decode())
             if isinstance(results, dict) and "message" in results:
                 results = []
 
         response = generate_natural_response(nl_query.query, results)
-        return {"response": response}
-    
+        return {
+                 "response": response,
+                 "soql_query":soql_query
+                 }
+
     except Exception as e:
         return {"error": str(e)}
-
 
 @router.post("/assistant")
 async def assistant_api(nl_query: NaturalLanguageQuery):

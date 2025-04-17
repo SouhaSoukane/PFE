@@ -14,6 +14,17 @@ from App.services.exemples import SOQL_EXAMPLES, detect_example_need
 
 
 app = FastAPI()
+datetime_fields = [
+    "Loading__c.Date__c",
+    "Reception__c.Date__c",
+    "IssuedDate__c",
+    "CreatedDate__c",
+    "LastOrderDate__c",
+    "PaymentDate__c",
+    "ActualVisitDate__c",
+    "PlannedVisitDate__c"
+]
+
 nb_question = 0
 def estimate_token_count(messages):
     """
@@ -41,7 +52,7 @@ class SessionHandler:
      MAX_TOKENS_CONTEXT = 6000
      if not self.messages:
         self.messages.append({"role": "system", "content": system_prompt})
-     elif nb_question > 4:
+     elif nb_question > 3:
         nb_question = 0
     #  estimate_token_count(self.messages) > MAX_TOKENS_CONTEXT:
         print("⚠️ Contexte trop long, réinitialisation.")
@@ -84,9 +95,7 @@ def estimate_token_count(messages):
         word_count = len(content.split())
         total_tokens += int(word_count * 0.75) + 4  # +4 pour le rôle / structure
     return total_tokens
-    
-     
-schema = load_yaml(FILE_PATH)
+
 
 session = SessionHandler()
 def extract_relevant_objects(natural_language_query: str, schema: dict) -> dict:
@@ -220,16 +229,10 @@ def correct_datetime_format(soql_query: str, datetime_fields: list) -> str:
 
     return re.sub(pattern, replacer, soql_query)
 
-def generate_soql_query(natural_language_query: str) -> str:
+def generate_soql_query(extracted_data: dict) -> str:
     
     current_time = datetime.now()
     current_date_str = current_time.strftime("%Y-%m-%d")
-
-    extracted_data = extract_relevant_objects(natural_language_query, schema)
-
-    if not extracted_data["objects"]:
-        print("\n❌ Aucun objet pertinent trouvé.")
-        return "Erreur : Aucun objet pertinent trouvé."
 
     # # ➕ Détection dynamique des exemples
     # examples_needed = detect_example_need(natural_language_query,extracted_data)
@@ -325,18 +328,9 @@ WHERE Account__r.Name LIKE '%Numilog%'
     soql_query = soql_query.strip("```soql").strip("```").strip()
 
     soql_query = correct_soql_relations(soql_query, extracted_data)
-    datetime_fields = [
-    "Loading__c.Date__c",
-    "Reception__c.Date__c",
-    "IssuedDate__c",
-    "CreatedDate__c",
-    "LastOrderDate__c",
-    "PaymentDate__c",
-    "ActualVisitDate__c",
-    "PlannedVisitDate__c"
-]
+   
     soql_query = correct_datetime_format(soql_query, datetime_fields)
-    soql_query = correct_soql_query(soql_query, extracted_data)
+    # soql_query = correct_soql_query(soql_query, extracted_data)
     print("\n✅ Requête SOQL générée :")
     print(soql_query)
 
@@ -383,6 +377,72 @@ Fait attention si elle est correcte n'y touche à rien
             return result.replace("```soql", "").replace("```", "").strip()
     else:
             return result.strip()
+
+def refine_soql_query( extracted_data: dict, original_soql: str, execution_error: str) -> str:
+    """
+    Utilise un LLM pour corriger une requête SOQL basée sur une erreur d'exécution.
+    """
+
+    system_message = """
+    🛠️ Tu es un expert Salesforce spécialisé dans la correction de requêtes SOQL.
+
+    🎯 Objectif : Corriger la requête SOQL fournie en tenant compte de :
+- l’intention exprimée par l'utilisateur
+- la structure de la requête actuelle
+- et surtout, le message d’erreur renvoyé lors de son exécution.
+
+🧠 Contraintes :
+1. Tu dois absolument respecter les règles SOQL (pas de champs/relations inventés).
+2. Tu peux reformuler la requête si nécessaire, mais elle doit rester fidèle à l’intention initiale.
+3. Ne retourne que la requête SOQL dans un bloc `soql`. Aucune explication ou commentaire.
+4. Si le message d'erreur indique qu’un champ ou une relation est invalide, corrige cela uniquement avec les champs connus (fournis dans les objets Salesforce).
+5. Ne traverse pas plus d’un niveau de relation (ex: `A__r.B__r.C` est interdit).
+"""
+    if "intention" in extracted_data:
+     intention_summary = extracted_data["intention"]
+    else:
+    # Gérer le cas où l'intention est absente
+     intention_summary = "Intention non définie"
+    
+    user_message = f"""
+🎯 question:
+    {  intention_summary}
+
+🧠 Requête SOQL initiale :  
+```soql
+{original_soql}
+❌ Message d’erreur d'exécution :
+
+📐 Relations disponibles :
+{json.dumps(extracted_data['relations'], indent=2)}
+
+🧾 Champs disponibles :
+{json.dumps(extracted_data['fields'], indent=2)}
+{execution_error}
+
+🔁 Corrige la requête SOQL pour qu’elle respecte les contraintes et fonctionne correctement. """
+    response = openai_client.chat.completions.create(
+     model="gpt-4o",
+     messages=[
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": user_message}
+     ],
+     temperature=0.2,
+     max_tokens=300
+    )
+
+    corrected_soql = response.choices[0].message.content.strip()
+    corrected_soql = corrected_soql.strip("```soql").strip("```").strip()
+
+# Tu peux ici aussi appliquer tes fonctions de correction
+    # corrected_soql = correct_soql_relations(corrected_soql, extract_relevant_objects(original_nl_query, schema))
+    corrected_soql = correct_datetime_format(corrected_soql, datetime_fields)
+    # corrected_soql = correct_soql_query(corrected_soql, extract_relevant_objects(original_nl_query, schema))
+
+    print("\n🔁 Requête SOQL corrigée après exécution échouée :")
+    print(corrected_soql)
+
+    return corrected_soql
 
 
 def evaluate_and_fix_soql_query(soql_query: str) -> dict:
