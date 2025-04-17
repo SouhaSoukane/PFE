@@ -65,8 +65,6 @@ def load_yaml(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return f.read()
 
-schema = load_yaml(FILE_PATH)
-
 def get_current_datetime():
     now = datetime.now()
     return {"datetime": now}
@@ -220,16 +218,10 @@ def correct_datetime_format(soql_query: str, datetime_fields: list) -> str:
 
     return re.sub(pattern, replacer, soql_query)
 
-def generate_soql_query(natural_language_query: str) -> str:
+def generate_soql_query(extracted_data: dict) -> str:
     
     current_time = datetime.now()
     current_date_str = current_time.strftime("%Y-%m-%d")
-
-    extracted_data = extract_relevant_objects(natural_language_query, schema)
-
-    if not extracted_data["objects"]:
-        print("\n❌ Aucun objet pertinent trouvé.")
-        return "Erreur : Aucun objet pertinent trouvé."
 
     # # ➕ Détection dynamique des exemples
     # examples_needed = detect_example_need(natural_language_query,extracted_data)

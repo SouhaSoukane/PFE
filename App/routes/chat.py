@@ -21,7 +21,7 @@ class SOQLRequest(BaseModel):
 class QueryRequest(BaseModel):
     query: str
 
-
+schema = load_yaml(FILE_PATH)
 
 @router.post("/generate_soql")
 def generate_soql(request: SOQLRequest):
@@ -47,8 +47,14 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
     """
     Prend une requête en langage naturel, génère une requête SOQL, puis retourne les résultats.
     """
+    extracted_data = extract_relevant_objects(nl_query.query, schema)
+
+    if not extracted_data["objects"]:
+        print("\n❌ Aucun objet pertinent trouvé.")
+        return {"error": "Aucun objet pertinent trouvé."}
+   
     try:
-        soql_query = generate_soql_query(nl_query.query)
+        soql_query = generate_soql_query(extracted_data)
 
         query_model = QueryModel(query=soql_query)  
         results = get_accounts(query_model)  # Retourne un JSONResponse
@@ -62,7 +68,11 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
                 results = []
 
         response = generate_natural_response(nl_query.query, results)
-        return {"response": response}
+
+        return {
+                 "response": response,
+                 "soql_query":soql_query
+                 }
     
     except Exception as e:
         return {"error": str(e)}
