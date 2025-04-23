@@ -1,786 +1,447 @@
-Account :(Distributeur)
-- fullname: Name
-- fullName: Active__c
-  type: Checkbox
-- fullName: Address__c
-  type: Text
-- fullName: Code__c
-  type: Text
-- fullName: Email__c
-  type: Email
-- fullName: InternalDistributor__c
-  type: Checkbox
+Account:
+- Name
+- Active__c
+- Address__c
+- Code__c
+- Email__c
+- InternalDistributor__c
 AgentPayment__c:
-- fullName: Name
-- Child Relationship Name: Agent_Payments
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: IssuedDate__c
-  type: DateTime
-- fullName: SubmittedAmount__c
-  type: Currency
+- Name
+- 'child: Agent_Payments'
+- Agent__c > Contact
+- IssuedDate__c
+- SubmittedAmount__c
 Category__c:
-- fullName: Name
-- Child Relationship Name: Category
-- fullName: Code__c
-  type: Text
-- fullName: CreatedDate__c
-  type: DateTime
-- fullName: Description__c
-  type: Text
-- fullName: Parent__c
-  referenceTo: Category__c
-Contact (Agent): 
-- fullName: Name
-- Child Relationship Name: Agents
-- fullName: Active__c
-  type: Checkbox
-- fullName: CollectedAmount__c
-  type: Summary
-- fullName: Level__c
-  type: Picklist
-- fullName: Solde__c
-  type: Currency
-- fullName: SubmittedAmount__c
-  type: Summary
-- fullName: Type__c
-  type: Picklist
-- fullName: Warehouse__c
-  referenceTo: Warehouse__c
+- Name
+- 'child: Category'
+- Code__c
+- CreatedDate__c
+- Description__c
+- Parent__c > Category__c
+Contact (Agent):
+- Name
+- 'child: Agents'
+- Active__c
+- CollectedAmount__c
+- Level__c
+- Solde__c
+- SubmittedAmount__c
+- Type__c
+- Warehouse__c > Warehouse__c
 DeliveryItem__c:
-- fullName: Name
-- Child Relationship Name: DeliveryItems
-- fullName: Delivery__c
-  referenceTo: Delivery__c
-- fullName: OrderItem__c
-  referenceTo: OrderItem__c
-- fullName: Price__c
-  type: Currency
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: QTY__c
-  type: Number
-- fullName: Total__c
-  type: Currency
-- fullName: UOM__c
-  referenceTo: UOM__c
-- fullName: UseDefaultUnit__c
-  type: Checkbox
-Delivery__c: 
-- fullName: Name
-- Child Relationship Name: Deliveries
-- fullName: Address__c
-  type: Text
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: Created_From__c
-  type: Picklist
-- fullName: DeliveryDate__c
-  type: Date
-- fullName: Loading__c
-  referenceTo: Loading__c
-- fullName: Notes__c
-  type: Text
-- fullName: Order__c
-  referenceTo: Order__c
-- fullName: Source__c
-  referenceTo: Slot__c
-- fullName: Status__c
-  type: Picklist
-- fullName: Total__c
-  type: Currency
-- fullName: useOrderAddress__c
-  type: Checkbox
-- fullName: Visit__c
-  referenceTo: Visit__c
+- Name
+- 'child: DeliveryItems'
+- Delivery__c > Delivery__c
+- OrderItem__c > OrderItem__c
+- Price__c
+- ProductVariant__c > ProductVariant__c
+- QTY__c
+- Total__c
+- UOM__c > UOM__c
+- UseDefaultUnit__c
+Delivery__c:
+- Name
+- 'child: Deliveries'
+- Address__c
+- Agent__c > Contact
+- Created_From__c
+- DeliveryDate__c
+- Loading__c > Loading__c
+- Notes__c
+- Order__c > Order__c
+- Source__c > Slot__c
+- Status__c
+- Total__c
+- useOrderAddress__c
+- Visit__c > Visit__c
 Goal__c:
-- fullName: Name
-- Child Relationship Name: Goals
-- fullName: Agent__c
-  referenceTo: Contact 
-- fullName: EndDate__c
-  type: Date
-- fullName: NumberVisits__c
-  type: Number
-- fullName: PercentageProgress__c
-  type: Percent
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: Progress__c
-  type: Number
-- fullName: Quantity__c
-  type: Number
-- fullName: Revenue__c
-  type: Currency
-- fullName: StartDate__c
-  type: Date
-- fullName: Type__c
-  type: Picklist
+- Name
+- 'child: Goals'
+- Agent__c > Contact
+- EndDate__c
+- NumberVisits__c
+- PercentageProgress__c
+- ProductVariant__c > ProductVariant__c
+- Progress__c
+- Quantity__c
+- Revenue__c
+- StartDate__c
+- Type__c
 InventoryMovement__c:
-- fullName: Name
-- Child Relationship Name: Inventory_movements
-- fullName: Code__c
-  type: AutoNumber
-- fullName: Destination__c
-  referenceTo: Slot__c
-- fullName: Justification__c
-  type: Text
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: QTY__c
-  type: Number
-- fullName: Reference__c
-  type: Text
-- fullName: Source__c
-  referenceTo: Slot__c
-- fullName: Transfer__c
-  referenceTo: Transfer__c 
-- fullName: UOM__c
-  referenceTo: UOM__c
+- Name
+- 'child: Inventory_movements'
+- Code__c
+- Destination__c > Slot__c
+- Justification__c
+- ProductVariant__c > ProductVariant__c
+- QTY__c
+- Reference__c
+- Source__c > Slot__c
+- Transfer__c > Transfer__c
+- UOM__c > UOM__c
 InvoiceItem__c:
-- fullName: Name
-- Child Relationship Name: InvoiceItems
-- fullName: FreeQTY__c
-  type: Number
-- fullName: Invoice__c
-  referenceTo: Invoice__c
-- fullName: PriceExcludingTax__c
-  type: Currency
-- fullName: PriceIncludingTax__c
-  type: Currency
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: QTY__c
-  type: Number
-- fullName: TaxAmount__c
-  type: Currency
-- fullName: Tax__c
-  type: Number
-- fullName: TotalDiscount__c
-  type: Currency
-- fullName: TotalIncludingTax__c
-  type: Currency
-- fullName: TotalNetDiscount__c
-  type: Currency
-- fullName: Total__c
-  type: Currency
-- fullName: TTCDiscountApplied__c
-  type: Currency
-- fullName: UOM__c
-  referenceTo: UOM__c
+- Name
+- 'child: InvoiceItems'
+- FreeQTY__c
+- Invoice__c > Invoice__c
+- PriceExcludingTax__c
+- PriceIncludingTax__c
+- ProductVariant__c > ProductVariant__c
+- QTY__c
+- TaxAmount__c
+- Tax__c
+- TotalDiscount__c
+- TotalIncludingTax__c
+- TotalNetDiscount__c
+- Total__c
+- TTCDiscountApplied__c
+- UOM__c > UOM__c
 Invoice__c:
-- fullName: Name
-- Child Relationship Name: Invoices
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: DueDate__c
-  type: Date
-- fullName: invoiceDiscount__c
-  type: Currency
-- fullName: IssueDate__c
-  type: Date
-- fullName: ItemsTotalDiscount__c
-  type: Summary
-- fullName: Order__c
-  referenceTo: Order__c
-- fullName: PaidAmount__c
-  type: Summary
-- fullName: PaymentMethod__c
-  type: Picklist
-- fullName: POS__c
-  referenceTo: POS__c
-- fullName: RemainingAmount__c
-  type: Currency
-- fullName: StampDuty__c
-  type: Currency
-- fullName: Status__c
-  type: Picklist
-- fullName: TotalExcludingTaxDiscount__c
-  type: Summary
-- fullName: TotalExcludingTax__c
-  type: Summary
-- fullName: TotalIncludingTaxesDiscountApplied__c
-  type: Currency
-- fullName: TotalIncludingTax__c
-  type: Currency
-- fullName: TotalIncludingTVADiscountApplied__c
-  type: Currency
-- fullName: TotalIncludingTVA__c
-  type: Summary
-- fullName: TotalTVA__c
-  type: Summary
+- Name
+- 'child: Invoices'
+- Agent__c > Contact
+- DueDate__c
+- invoiceDiscount__c
+- IssueDate__c
+- ItemsTotalDiscount__c
+- Order__c > Order__c
+- PaidAmount__c
+- PaymentMethod__c
+- POS__c > POS__c
+- RemainingAmount__c
+- StampDuty__c
+- Status__c
+- TotalExcludingTaxDiscount__c
+- TotalExcludingTax__c
+- TotalIncludingTaxesDiscountApplied__c
+- TotalIncludingTax__c
+- TotalIncludingTVADiscountApplied__c
+- TotalIncludingTVA__c
+- TotalTVA__c
 Loading__c:
-- fullName: Name
-  type: AutoNumber
-- fullName: CurrencyIsoCode
-  type: Picklist
-- fullName: Date__c
-  type: DateTime
-- fullName: Destination__c
-  referenceTo: Slot__c
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: NbOrders__c
-  type: Summary
-- fullName: Notes__c
-  type: Text
-- fullName: Source__c
-  referenceTo: Slot__c
-- fullName: Status__c
-  type: Picklist
-OrderItem__c: 
-- fullName: Name
-- Child Relationship Name: OrderItems
-- fullName: AllocatedQTY__c
-  type: Number
-- fullName: CancelledQTY__c
-  type: Number
-- fullName: ConfirmedQTY__c
-  type: Number
-- fullName: DeliveredQTY__c
-  type: Number
-- fullName: FreeQTY__c
-  type: Number
-- fullName: OrderedQTY__c
-  type: Number
-- fullName: Order__c
-  referenceTo: Order__c
-- fullName: Price__c
-  type: Currency
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: Status__c
-  type: Text
-- fullName: TotalAllocated__c
-  type: Currency
-- fullName: TotalConfirmed__c
-  type: Currency
-- fullName: TotalDelivered__c
-  type: Currency
-- fullName: TotalDiscount__c
-  type: Currency
-- fullName: TotalOrdered__c
-  type: Currency
-- fullName: UOM__c
-  referenceTo: UOM__c
-- fullName: useDefaultUnit__c
-  type: Checkbox
+- Name
+- CurrencyIsoCode
+- Date__c
+- Destination__c > Slot__c
+- Agent__c > Contact
+- NbOrders__c
+- Notes__c
+- Source__c > Slot__c
+- Status__c
+OrderItem__c:
+- Name
+- 'child: OrderItems'
+- AllocatedQTY__c
+- CancelledQTY__c
+- ConfirmedQTY__c
+- DeliveredQTY__c
+- FreeQTY__c
+- OrderedQTY__c
+- Order__c > Order__c
+- Price__c
+- ProductVariant__c > ProductVariant__c
+- Status__c
+- TotalAllocated__c
+- TotalConfirmed__c
+- TotalDelivered__c
+- TotalDiscount__c
+- TotalOrdered__c
+- UOM__c > UOM__c
+- useDefaultUnit__c
 Order__c:
-- fullName: Name
-- Child Relationship Name: Orders
-- fullName: Closed__c
-  type: Checkbox
-- fullName: Date__c
-  type: Date
-- fullName: ConfirmationStatus__c
-  type: Picklist
-- fullName: CreatedFromMobile__c
-  type: Checkbox
-- fullName: DeliveryAddress__c
-  type: Text
-- fullName: DeliveryStatus__c
-  type: Picklist
-- fullName: Desired_Date__c
-  type: Date
-- fullName: ItemsTotalDiscount__c
-  type: Summary
-- fullName: OrderDiscount__c
-  type: Currency
-- fullName: PaymentMethod__c
-  type: Picklist
-- fullName: POSAddress__c
-  type: Text
-- fullName: POS__c
-  referenceTo: POS__c
-- fullName: PriceList__c
-  referenceTo: PriceList__c
-- fullName: SalesRep__c
-  referenceTo: Contact
-- fullName: Slot__c
-  referenceTo: Slot__c
-- fullName: Status__c
-  type: Picklist
-- fullName: TotalAllocated__c
-  type: Summary
-- fullName: TotalConfirmed__c
-  type: Summary
-- fullName: TotalDelivered__c
-  type: Summary
-- fullName: TotalDiscount__c
-  type: Currency
-- fullName: TotalOrderedWithDiscount__c
-  type: Currency
-- fullName: TotalOrdered__c
-  type: Summary
-- fullName: UsePOSAddress__c
-  type: Checkbox
-- fullName: Visit__c
-  referenceTo: Visit__c
+- Name
+- 'child: Orders'
+- Closed__c
+- Date__c
+- ConfirmationStatus__c
+- CreatedFromMobile__c
+- DeliveryAddress__c
+- DeliveryStatus__c
+- Desired_Date__c
+- ItemsTotalDiscount__c
+- OrderDiscount__c
+- PaymentMethod__c
+- POSAddress__c
+- POS__c > POS__c
+- PriceList__c > PriceList__c
+- SalesRep__c > Contact
+- Slot__c > Slot__c
+- Status__c
+- TotalAllocated__c
+- TotalConfirmed__c
+- TotalDelivered__c
+- TotalDiscount__c
+- TotalOrderedWithDiscount__c
+- TotalOrdered__c
+- UsePOSAddress__c
+- Visit__c > Visit__c
 POSContact__c:
-- fullName: Name
-- Child Relationship Name: Contacts_POS
-- fullName: Email__c
-  type: Email
-- fullName: PhoneNumber__c
-  type: Phone
-- fullName: POS__c
-  referenceTo: POS__c
+- Name
+- 'child: Contacts_POS'
+- Email__c
+- PhoneNumber__c
+- POS__c > POS__c
 POS__c:
-- fullName: Name
-- Child Relationship Name: POSs
-- fullName: Active__c
-  type: Checkbox
-- fullName: Address__c
-  type: Text
-- fullName: Category__c
-  type: Picklist
-- fullName: Code__c
-  type: Text
-- fullName: Email__c
-  type: Email
-- fullName: LastOrderDate__c
-  type: DateTime
-- fullName: Location__c
-  type: Location
-- fullName: OrderCount__c
-  type: Number
-- fullName: PaidAmount__c
-  type: Summary
-- fullName: PriceList__c
-  referenceTo: PriceList__c
-- fullName: Solde__c
-  type: Currency
-- fullName: Territory__c
-  referenceTo: Territory__c
-- fullName: TotalInvoiced__c
-  type: Summary
-- fullName: Type__c
-  type: Picklist
+- Name
+- 'child: POSs'
+- Active__c
+- Address__c
+- Category__c
+- Code__c
+- Email__c
+- LastOrderDate__c
+- Location__c
+- OrderCount__c
+- PaidAmount__c
+- PriceList__c > PriceList__c
+- Solde__c
+- Territory__c > Territory__c
+- TotalInvoiced__c
+- Type__c
 PaymentGroup__c:
-- fullName: Name
-- Child Relationship Name: Payment_Groups
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: Amount__c
-  type: Currency
-- fullName: PaymentDate__c
-  type: DateTime
-- fullName: POS__c
-  referenceTo: POS__c
+- Name
+- 'child: Payment_Groups'
+- Agent__c > Contact
+- Amount__c
+- PaymentDate__c
+- POS__c > POS__c
 Payment__c:
-- fullName: Name
-- Child Relationship Name: Payments
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: Amount__c
-  type: Currency
-- fullName: Invoice__c
-  referenceTo: Invoice__c
-- fullName: PaymentDate__c
-  type: DateTime
-- fullName: PaymentGroup__c
-  referenceTo: PaymentGroup__c
-- fullName: PaymentMethod__c
-  type: Picklist
-- fullName: Visit__c
-  referenceTo: Visit__c
+- Name
+- 'child: Payments'
+- Agent__c > Contact
+- Amount__c
+- Invoice__c > Invoice__c
+- PaymentDate__c
+- PaymentGroup__c > PaymentGroup__c
+- PaymentMethod__c
+- Visit__c > Visit__c
 PriceList__c:
-- fullName: Name
-- fullName: Active__c
-  type: Checkbox
-- fullName: DiscountPolicy__c
-  type: Picklist
-- fullName: Standard__c
-  type: Checkbox
+- Name
+- Active__c
+- DiscountPolicy__c
+- Standard__c
 PriceRule__c:
-- fullName: Name
-- Child Relationship Name: Price_Rules
-- fullName: Active__c
-  type: Checkbox
-- fullName: ApplyOn__c
-  type: Picklist
-- fullName: BaseOn__c
-  type: Picklist
-- fullName: Category__c
-  referenceTo: Category__c
-- fullName: Computation__c
-  type: Picklist
-- fullName: DiscountFixed__c
-  type: Currency
-- fullName: Discount__c
-  type: Percent
-- fullName: EndDate__c
-  type: Date
-- fullName: ExtraFee__c
-  type: Currency
-- fullName: FixedPrice__c
-  type: Currency
-- fullName: MinQTY__c
-  type: Number
-- fullName: PriceList__c
-  referenceTo: PriceList__c
-- fullName: Product__c
-  referenceTo: Product__c
-- fullName: RoundingMethod__c
-  type: Number
-- fullName: StartDate__c
-  type: Date
-- fullName: Variant__c
-  referenceTo: ProductVariant__c
+- Name
+- 'child: Price_Rules'
+- Active__c
+- ApplyOn__c
+- BaseOn__c
+- Category__c > Category__c
+- Computation__c
+- DiscountFixed__c
+- Discount__c
+- EndDate__c
+- ExtraFee__c
+- FixedPrice__c
+- MinQTY__c
+- PriceList__c > PriceList__c
+- Product__c > Product__c
+- RoundingMethod__c
+- StartDate__c
+- Variant__c > ProductVariant__c
 ProductInventory__c:
-- Child Relationship Name: ProductInventories
-- fullName: Product__c
-  referenceTo: ProductVariant__c  
-- fullName: QTY__c
-  type: Number
-- fullName: RemoveFromInventory__c
-  type: Checkbox
-- fullName: Slot__c
-  referenceTo: Slot__c
-- fullName: UOM__c
-  type: Text
+- 'child: ProductInventories'
+- Product__c > ProductVariant__c
+- QTY__c
+- RemoveFromInventory__c
+- Slot__c > Slot__c
+- UOM__c
 ProductVariant__c:
-- fullName: Name
-- Child Relationship Name: Variantes_d_articles1
-- fullName: Active__c
-  type: Checkbox
-- fullName: Barcode__c
-  type: Text
-- fullName: BaseUnit__c
-  referenceTo: UOM__c
-- fullName: Code__c
-  type: Text
-- fullName: Description__c
-  type: Text
-- fullName: Product__c
-  referenceTo: Product__c
-- fullName: StorageUnit__c
-  referenceTo: UOM__c
-- fullName: Volume__c
-  type: Number
-- fullName: Weight__c
-  type: Number
+- Name
+- 'child: Variantes_d_articles1'
+- Active__c
+- Barcode__c
+- BaseUnit__c > UOM__c
+- Code__c
+- Description__c
+- Product__c > Product__c
+- StorageUnit__c > UOM__c
+- Volume__c
+- Weight__c
 Product__c:
-- Child Relationship Name: Produits
-- fullName: Active__c
-  type: Checkbox
-- fullName: Barcode__c
-  type: Text
-- fullName: BaseUnit__c
-  referenceTo: UOM__c
-- fullName: Category__c
-  referenceTo: Category__c
-- fullName: Code__c
-  type: Text
-- fullName: Description__c
-  type: Text
-- fullName: Price__c
-  type: Currency
-- fullName: PurchaseTax__c
-  referenceTo: Taxe__c
-- fullName: SaleTax__c
-  referenceTo: Taxe__c
-- fullName: StorageUnit__c
-  referenceTo: UOM__c
-- fullName: Volume__c
-  type: Number
-- fullName: Weight__c
-  type: Number
+- 'child: Produits'
+- Active__c
+- Barcode__c
+- BaseUnit__c > UOM__c
+- Category__c > Category__c
+- Code__c
+- Description__c
+- Price__c
+- PurchaseTax__c > Taxe__c
+- SaleTax__c > Taxe__c
+- StorageUnit__c > UOM__c
+- Volume__c
+- Weight__c
 PromotionalProgram__c:
-- fullName: Name
-- fullName: ActiveDate__c
-  type: Checkbox
-- fullName: Active__c
-  type: Checkbox
-- fullName: EndDate__c
-  type: Date
-- fullName: StartDate__c
-  type: Date
-- fullName: Type__c
-  type: Picklist
+- Name
+- ActiveDate__c
+- Active__c
+- EndDate__c
+- StartDate__c
+- Type__c
 ReceptionItem__c:
-- fullName: Name
-- Child Relationship Name: Reception_Items
-- fullName: CompletedQTY__c
-  type: Number
-- fullName: Price__c
-  type: Currency
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: Reception__c
-  referenceTo: Reception__c
-- fullName: RequestedQTY__c
-  type: Number
-- fullName: UOM__c
-  referenceTo: UOM__c
-- fullName: UseDefaultUOM__c
-  type: Checkbox
+- Name
+- 'child: Reception_Items'
+- CompletedQTY__c
+- Price__c
+- ProductVariant__c > ProductVariant__c
+- Reception__c > Reception__c
+- RequestedQTY__c
+- UOM__c > UOM__c
+- UseDefaultUOM__c
 Reception__c:
-- fullName: Name
-- fullName: Date__c
-  type: DateTime
-- fullName: Destination__c
-  referenceTo: Slot__c
-  Child Relationship Name: Receptions1
-- fullName: Source__c
-  referenceTo: Slot__c
-  Child Relationship Name: Receptions
-- fullName: Status__c
-  type: Picklist
+- Name
+- Date__c
+- 'Destination__c > Slot__c (child: Receptions1)'
+- 'Source__c > Slot__c (child: Receptions)'
+- Status__c
 Reward__c:
-- fullName: Name
-- Child Relationship Name: Rewards
-- fullName: ApplyOn__c
-  type: Picklist
-- fullName: Category__c
-  referenceTo: Category__c
-- fullName: DiscountFixed__c
-  type: Currency
-- fullName: Discount__c
-  type: Percent
-- fullName: MaxDiscount__c
-  type: Currency
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: Product__c
-  referenceTo: Product__c
-- fullName: PromotionalProgram__c
-  referenceTo: PromotionalProgram__c
-- fullName: QTYRewarded__c
-  type: Number
-- fullName: RewardType__c
-  type: Picklist
+- Name
+- 'child: Rewards'
+- ApplyOn__c
+- Category__c > Category__c
+- DiscountFixed__c
+- Discount__c
+- MaxDiscount__c
+- ProductVariant__c > ProductVariant__c
+- Product__c > Product__c
+- PromotionalProgram__c > PromotionalProgram__c
+- QTYRewarded__c
+- RewardType__c
 RoutePlan__c:
-- fullName: Name
-- Child Relationship Name: RoutePlans
-- fullName: Active__c
-  type: Checkbox
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: Frequency__c
-  type: Picklist
-- fullName: Friday__c
-  type: Checkbox
-- fullName: Monday__c
-  type: Checkbox
-- fullName: POS__c
-  referenceTo: POS__c
-- fullName: Saturday__c
-  type: Checkbox
-- fullName: StartDate__c
-  type: Date
-- fullName: Sunday__c
-  type: Checkbox
-- fullName: ThisWeek__c
-  type: Checkbox
-- fullName: Thursday__c
-  type: Checkbox
-- fullName: Tuesday__c
-  type: Checkbox
-- fullName: Wednesday__c
-  type: Checkbox
+- Name
+- 'child: RoutePlans'
+- Active__c
+- Agent__c > Contact
+- Frequency__c
+- Friday__c
+- Monday__c
+- POS__c > POS__c
+- Saturday__c
+- StartDate__c
+- Sunday__c
+- ThisWeek__c
+- Thursday__c
+- Tuesday__c
+- Wednesday__c
 Rule__c:
-- fullName: Name
-- Child Relationship Name: Rules
-- fullName: ApplyOn__c
-  type: Picklist
-- fullName: Category__c
-  referenceTo: Category__c
-- fullName: MinPurchase__c
-  type: Currency
-- fullName: MinQuantity__c
-  type: Number
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: Product__c
-  referenceTo: Product__c
-- fullName: PromotionalProgram__c
-  referenceTo: PromotionalProgram__c
-- fullName: TaxIncluded__c
-  type: Checkbox
+- Name
+- 'child: Rules'
+- ApplyOn__c
+- Category__c > Category__c
+- MinPurchase__c
+- MinQuantity__c
+- ProductVariant__c > ProductVariant__c
+- Product__c > Product__c
+- PromotionalProgram__c > PromotionalProgram__c
+- TaxIncluded__c
 Slot__c:
-- fullName: Name
-- Child Relationship Name: Slots
-- fullName: Active__c
-  type: Checkbox
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: Characteristics__c
-  type: Picklist
-- fullName: Code__c
-  type: Text
-- fullName: RemoveFromInventory__c
-  type: Checkbox
-- fullName: Type__c
-  type: Picklist
-- fullName: Van__c
-  referenceTo: Van__c
-- fullName: Warehouse__c
-  referenceTo: Warehouse__c
+- Name
+- 'child: Slots'
+- Active__c
+- Agent__c > Contact
+- Characteristics__c
+- Code__c
+- RemoveFromInventory__c
+- Type__c
+- Van__c > Van__c
+- Warehouse__c > Warehouse__c
 Taxe__c:
-- fullName: Name
-- fullName: Amount__c
-  type: Percent
-- fullName: FixedAmount__c
-  type: Number
-- fullName: PercentageAmount__c
-  type: Percent
-- fullName: TaxeCalculation__c
-  type: Picklist
+- Name
+- Amount__c
+- FixedAmount__c
+- PercentageAmount__c
+- TaxeCalculation__c
 TerritoryPromo__c:
-- fullName: Name
-- Child Relationship Name: TerritoriesPromos
-- fullName: PromotionalProgram__c
-  referenceTo: PromotionalProgram__c
-- fullName: Territory__c
-  referenceTo: Territory__c
+- Name
+- 'child: TerritoriesPromos'
+- PromotionalProgram__c > PromotionalProgram__c
+- Territory__c > Territory__c
 Territory__c:
-- fullName: Name
-- Child Relationship Name: Territories
-- fullName: Active__c
-  type: Checkbox
-- fullName: ParentTerritory__c
-  referenceTo: Territory__c
-- fullName: PriceList__c
-  referenceTo: PriceList__c
-- fullName: Type__c
-  type: Picklist
+- Name
+- 'child: Territories'
+- Active__c
+- ParentTerritory__c > Territory__c
+- PriceList__c > PriceList__c
+- Type__c
 TransferItem__c:
-- fullName: Name
-- Child Relationship Name: TransfertItems
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: QTY__c
-  type: Number
-- fullName: Transfer__c
-  referenceTo: Transfer__c
-- fullName: UOM__c
-  referenceTo: UOM__c
+- Name
+- 'child: TransfertItems'
+- ProductVariant__c > ProductVariant__c
+- QTY__c
+- Transfer__c > Transfer__c
+- UOM__c > UOM__c
 Transfer__c:
-- fullName: Date__c
-  type: DateTime
-- fullName: Delivery__c
-  referenceTo: Delivery__c
-  Child Relationship Name: Transfers
-- fullName: Destination__c
-  referenceTo: Slot__c
-  Child Relationship Name: Transferts
-- fullName: Justification__c
-  type: Picklist
-- fullName: Loading__c
-  referenceTo: Loading__c
-  Child Relationship Name: Transfers
-- fullName: Order__c
-  referenceTo: Order__c
-  Child Relationship Name: Transfers
-- fullName: Reception__c
-  referenceTo: Reception__c
-  Child Relationship Name: Transfers
-- fullName: Source__c
-  referenceTo: Slot__c
-  Child Relationship Name: 	Transferts1
-- fullName: Status__c
-  type: Picklist
-- fullName: Unloading__c
-  referenceTo: Unloading__c
-  Child Relationship Name: Transfers
+- Date__c
+- 'Delivery__c > Delivery__c (child: Transfers)'
+- 'Destination__c > Slot__c (child: Transferts)'
+- Justification__c
+- 'Loading__c > Loading__c (child: Transfers)'
+- 'Order__c > Order__c (child: Transfers)'
+- 'Reception__c > Reception__c (child: Transfers)'
+- 'Source__c > Slot__c (child: Transferts1)'
+- Status__c
+- 'Unloading__c > Unloading__c (child: Transfers)'
 UOM__c:
-- fullName: Name
-- Child Relationship Name: Unit_s_de_mesure
-- fullName: BaseUnit__c
-  type: Checkbox
-- fullName: Multiplier__c
-  type: Number
-- fullName: ParentUnit__c
-  referenceTo: UOM__c
-- fullName: Symbole__c
-  type: Text
-- fullName: Type__c
-  type: Picklist
+- Name
+- 'child: Unit_s_de_mesure'
+- BaseUnit__c
+- Multiplier__c
+- ParentUnit__c > UOM__c
+- Symbole__c
+- Type__c
 UnloadingItem__c:
-- fullName: Name
-- Child Relationship Name: UnloadingItems
-- fullName: ProductVariant__c
-  referenceTo: ProductVariant__c
-- fullName: QTY__c
-  type: Number
-- fullName: Unloading__c
-  referenceTo: Unloading__c
-- fullName: UOM__c
-  referenceTo: UOM__c
+- Name
+- 'child: UnloadingItems'
+- ProductVariant__c > ProductVariant__c
+- QTY__c
+- Unloading__c > Unloading__c
+- UOM__c > UOM__c
 Unloading__c:
-- fullName: Name
-- fullName: Date__c
-  type: Date
-- fullName: Destination__c
-  referenceTo: Slot__c
-  Child Relationship Name: DestinationUnloadings
-- fullName: Notes__c
-  type: Text
-- fullName: Source__c
-  referenceTo: Slot__c
-  Child Relationship Name: SourceUnloadings
-- fullName: Status__c
-  type: Picklist
+- Name
+- Date__c
+- 'Destination__c > Slot__c (child: DestinationUnloadings)'
+- Notes__c
+- 'Source__c > Slot__c (child: SourceUnloadings)'
+- Status__c
+User:
+  - Name
+  - Contact > Contact
+   - 'child: Users '
 UserTerritoryAssignement__c:
-- fullName: Name
-- Child Relationship Name: UserTerritoryAssignment
-- fullName: Territory__c
-  referenceTo: Territory__c
-- fullName: User__c
-  referenceTo: User
+- Name
+- 'child: UserTerritoryAssignment'
+- Territory__c > Territory__c
+- User__c > User
 Van__c:
-- fullName: Name
-- Child Relationship Name: Vans
-- fullName: AcquisitionYear__c
-  type: Date
-- fullName: Active__c
-  type: Checkbox
-- fullName: Characteristics__c
-  type: Picklist
-- fullName: Code__c
-  type: AutoNumber
-- fullName: Driver__c
-  referenceTo: Contact
-- fullName: Model__c
-  type: Picklist
-- fullName: Registration__c
-  type: Number
-- fullName: UtilizationYear__c
-  type: Date
-- fullName: Warehouse__c
-  referenceTo: Warehouse__c
+- Name
+- 'child: Vans'
+- AcquisitionYear__c
+- Active__c
+- Characteristics__c
+- Code__c
+- Driver__c > Contact
+- Model__c
+- Registration__c
+- UtilizationYear__c
+- Warehouse__c > Warehouse__c
 Visit__c:
-- fullName: Name
-- Child Relationship Name: Visit
-- fullName: ActualVisitDate__c
-  type: DateTime
-- fullName: Agent__c
-  referenceTo: Contact
-- fullName: PlannedVisitDate__c
-  type: DateTime
-- fullName: POS__c
-  referenceTo: POS__c
-- fullName: RoutePlan__c
-  referenceTo: RoutePlan__c
-- fullName: Status__c
-  type: Picklist
-- fullName: SuccessfulVisit__c
-  type: Checkbox
-- fullName: Summary__c
-  type: LongTextArea
-- fullName: Type__c
-  type: Picklist
+- Name
+- 'child: Visit'
+- ActualVisitDate__c
+- Agent__c > Contact
+- PlannedVisitDate__c
+- POS__c > POS__c
+- RoutePlan__c > RoutePlan__c
+- Status__c
+- SuccessfulVisit__c
+- Summary__c
+- Type__c
 Warehouse__c:
-- fullName: Name
-- Child Relationship Name: Warehouses
-- fullName: Account__c 
-  referenceTo: Account 
-- fullName: Active__c
-  type: Checkbox
-- fullName: Address__c
-  type: Text
-- fullName: Code__c
-  type: Text
-- fullName: Localization__c
-  type: Location
+- Name
+- 'child: Warehouses'
+- Account__c > Account
+- Active__c
+- Address__c
+- Code__c
+- Localization__c

@@ -52,7 +52,7 @@ class SessionHandler:
      MAX_TOKENS_CONTEXT = 6000
      if not self.messages:
         self.messages.append({"role": "system", "content": system_prompt})
-     elif nb_question > 3:
+     elif nb_question > 2:
         nb_question = 0
     #  estimate_token_count(self.messages) > MAX_TOKENS_CONTEXT:
         print("⚠️ Contexte trop long, réinitialisation.")
