@@ -1,25 +1,20 @@
+# NOTE : Tous les objets ci-dessous possèdent un champ 'Name' par défaut.
 Account:
-- Name
 - Active__c
 - Address__c
 - Code__c
-- Email__c
 - InternalDistributor__c
 AgentPayment__c:
-- Name
 - 'child: Agent_Payments'
 - Agent__c > Contact
 - IssuedDate__c
 - SubmittedAmount__c
 Category__c:
-- Name
 - 'child: Category'
 - Code__c
-- CreatedDate__c
 - Description__c
 - Parent__c > Category__c
 Contact (Agent):
-- Name
 - 'child: Agents'
 - Active__c
 - CollectedAmount__c
@@ -29,7 +24,6 @@ Contact (Agent):
 - Type__c
 - Warehouse__c > Warehouse__c
 DeliveryItem__c:
-- Name
 - 'child: DeliveryItems'
 - Delivery__c > Delivery__c
 - OrderItem__c > OrderItem__c
@@ -40,14 +34,12 @@ DeliveryItem__c:
 - UOM__c > UOM__c
 - UseDefaultUnit__c
 Delivery__c:
-- Name
 - 'child: Deliveries'
 - Address__c
 - Agent__c > Contact
 - Created_From__c
 - DeliveryDate__c
 - Loading__c > Loading__c
-- Notes__c
 - Order__c > Order__c
 - Source__c > Slot__c
 - Status__c
@@ -55,7 +47,6 @@ Delivery__c:
 - useOrderAddress__c
 - Visit__c > Visit__c
 Goal__c:
-- Name
 - 'child: Goals'
 - Agent__c > Contact
 - EndDate__c
@@ -68,7 +59,6 @@ Goal__c:
 - StartDate__c
 - Type__c
 InventoryMovement__c:
-- Name
 - 'child: Inventory_movements'
 - Code__c
 - Destination__c > Slot__c
@@ -80,7 +70,6 @@ InventoryMovement__c:
 - Transfer__c > Transfer__c
 - UOM__c > UOM__c
 InvoiceItem__c:
-- Name
 - 'child: InvoiceItems'
 - FreeQTY__c
 - Invoice__c > Invoice__c
@@ -97,7 +86,6 @@ InvoiceItem__c:
 - TTCDiscountApplied__c
 - UOM__c > UOM__c
 Invoice__c:
-- Name
 - 'child: Invoices'
 - Agent__c > Contact
 - DueDate__c
@@ -119,17 +107,14 @@ Invoice__c:
 - TotalIncludingTVA__c
 - TotalTVA__c
 Loading__c:
-- Name
 - CurrencyIsoCode
 - Date__c
 - Destination__c > Slot__c
 - Agent__c > Contact
 - NbOrders__c
-- Notes__c
 - Source__c > Slot__c
 - Status__c
 OrderItem__c:
-- Name
 - 'child: OrderItems'
 - AllocatedQTY__c
 - CancelledQTY__c
@@ -149,7 +134,6 @@ OrderItem__c:
 - UOM__c > UOM__c
 - useDefaultUnit__c
 Order__c:
-- Name
 - 'child: Orders'
 - Closed__c
 - Date__c
@@ -175,20 +159,12 @@ Order__c:
 - TotalOrdered__c
 - UsePOSAddress__c
 - Visit__c > Visit__c
-POSContact__c:
-- Name
-- 'child: Contacts_POS'
-- Email__c
-- PhoneNumber__c
-- POS__c > POS__c
 POS__c:
-- Name
 - 'child: POSs'
 - Active__c
 - Address__c
 - Category__c
 - Code__c
-- Email__c
 - LastOrderDate__c
 - Location__c
 - OrderCount__c
@@ -199,14 +175,12 @@ POS__c:
 - TotalInvoiced__c
 - Type__c
 PaymentGroup__c:
-- Name
 - 'child: Payment_Groups'
 - Agent__c > Contact
 - Amount__c
 - PaymentDate__c
 - POS__c > POS__c
 Payment__c:
-- Name
 - 'child: Payments'
 - Agent__c > Contact
 - Amount__c
@@ -216,12 +190,10 @@ Payment__c:
 - PaymentMethod__c
 - Visit__c > Visit__c
 PriceList__c:
-- Name
 - Active__c
 - DiscountPolicy__c
 - Standard__c
 PriceRule__c:
-- Name
 - 'child: Price_Rules'
 - Active__c
 - ApplyOn__c
@@ -247,21 +219,16 @@ ProductInventory__c:
 - Slot__c > Slot__c
 - UOM__c
 ProductVariant__c:
-- Name
 - 'child: Variantes_d_articles1'
 - Active__c
-- Barcode__c
 - BaseUnit__c > UOM__c
 - Code__c
 - Description__c
 - Product__c > Product__c
 - StorageUnit__c > UOM__c
-- Volume__c
-- Weight__c
 Product__c:
 - 'child: Produits'
 - Active__c
-- Barcode__c
 - BaseUnit__c > UOM__c
 - Category__c > Category__c
 - Code__c
@@ -270,17 +237,13 @@ Product__c:
 - PurchaseTax__c > Taxe__c
 - SaleTax__c > Taxe__c
 - StorageUnit__c > UOM__c
-- Volume__c
-- Weight__c
 PromotionalProgram__c:
-- Name
 - ActiveDate__c
 - Active__c
 - EndDate__c
 - StartDate__c
 - Type__c
 ReceptionItem__c:
-- Name
 - 'child: Reception_Items'
 - CompletedQTY__c
 - Price__c
@@ -290,13 +253,11 @@ ReceptionItem__c:
 - UOM__c > UOM__c
 - UseDefaultUOM__c
 Reception__c:
-- Name
 - Date__c
 - 'Destination__c > Slot__c (child: Receptions1)'
 - 'Source__c > Slot__c (child: Receptions)'
 - Status__c
 Reward__c:
-- Name
 - 'child: Rewards'
 - ApplyOn__c
 - Category__c > Category__c
@@ -309,7 +270,6 @@ Reward__c:
 - QTYRewarded__c
 - RewardType__c
 RoutePlan__c:
-- Name
 - 'child: RoutePlans'
 - Active__c
 - Agent__c > Contact
@@ -325,7 +285,6 @@ RoutePlan__c:
 - Tuesday__c
 - Wednesday__c
 Rule__c:
-- Name
 - 'child: Rules'
 - ApplyOn__c
 - Category__c > Category__c
@@ -336,7 +295,6 @@ Rule__c:
 - PromotionalProgram__c > PromotionalProgram__c
 - TaxIncluded__c
 Slot__c:
-- Name
 - 'child: Slots'
 - Active__c
 - Agent__c > Contact
@@ -347,25 +305,21 @@ Slot__c:
 - Van__c > Van__c
 - Warehouse__c > Warehouse__c
 Taxe__c:
-- Name
 - Amount__c
 - FixedAmount__c
 - PercentageAmount__c
 - TaxeCalculation__c
 TerritoryPromo__c:
-- Name
 - 'child: TerritoriesPromos'
 - PromotionalProgram__c > PromotionalProgram__c
 - Territory__c > Territory__c
 Territory__c:
-- Name
 - 'child: Territories'
 - Active__c
 - ParentTerritory__c > Territory__c
 - PriceList__c > PriceList__c
 - Type__c
 TransferItem__c:
-- Name
 - 'child: TransfertItems'
 - ProductVariant__c > ProductVariant__c
 - QTY__c
@@ -383,7 +337,6 @@ Transfer__c:
 - Status__c
 - 'Unloading__c > Unloading__c (child: Transfers)'
 UOM__c:
-- Name
 - 'child: Unit_s_de_mesure'
 - BaseUnit__c
 - Multiplier__c
@@ -391,30 +344,25 @@ UOM__c:
 - Symbole__c
 - Type__c
 UnloadingItem__c:
-- Name
 - 'child: UnloadingItems'
 - ProductVariant__c > ProductVariant__c
 - QTY__c
 - Unloading__c > Unloading__c
 - UOM__c > UOM__c
 Unloading__c:
-- Name
 - Date__c
 - 'Destination__c > Slot__c (child: DestinationUnloadings)'
 - Notes__c
 - 'Source__c > Slot__c (child: SourceUnloadings)'
 - Status__c
 User:
-  - Name
   - Contact > Contact
    - 'child: Users '
 UserTerritoryAssignement__c:
-- Name
 - 'child: UserTerritoryAssignment'
 - Territory__c > Territory__c
 - User__c > User
 Van__c:
-- Name
 - 'child: Vans'
 - AcquisitionYear__c
 - Active__c
@@ -426,7 +374,6 @@ Van__c:
 - UtilizationYear__c
 - Warehouse__c > Warehouse__c
 Visit__c:
-- Name
 - 'child: Visit'
 - ActualVisitDate__c
 - Agent__c > Contact
@@ -438,7 +385,6 @@ Visit__c:
 - Summary__c
 - Type__c
 Warehouse__c:
-- Name
 - 'child: Warehouses'
 - Account__c > Account
 - Active__c

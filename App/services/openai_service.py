@@ -25,46 +25,7 @@ datetime_fields = [
     "PlannedVisitDate__c"
 ]
 
-nb_question = 0
-def estimate_token_count(messages):
-    """
-    Estime approximativement le nombre de tokens utilisés dans une liste de messages.
-    Basé sur une moyenne de 0.75 token par mot (valeur typique pour l'anglais/français).
-    """
-    total_tokens = 0
-    for msg in messages:
-        content = msg.get("content", "")
-        word_count = len(content.split())
-        total_tokens += int(word_count * 0.75) + 4  # +4 pour le rôle / structure
-    return total_tokens
-class SessionHandler:
-    def __init__(self):
-        self.messages = []
-        self.system_prompt_sent = False
 
-    def reset(self):
-        self.messages = []
-        self.system_prompt_sent = False
-
-    def initialize_if_needed(self, system_prompt):
-     global nb_question
-  
-     MAX_TOKENS_CONTEXT = 6000
-     if not self.messages:
-        self.messages.append({"role": "system", "content": system_prompt})
-     elif nb_question > 2:
-        nb_question = 0
-    #  estimate_token_count(self.messages) > MAX_TOKENS_CONTEXT:
-        print("⚠️ Contexte trop long, réinitialisation.")
-        self.reset()
-        self.messages.append({"role": "system", "content": system_prompt})
-
-    def append_user_question(self, content: str):
-        # Seules les vraies questions utilisateur vont dans l'historique
-        self.messages.append({"role": "user", "content": content})
-
-    def get_history(self):
-        return self.messages
 
 
 # Modèle pour la requête en langage naturel
@@ -82,39 +43,12 @@ def get_current_datetime():
     now = datetime.now()
     return {"datetime": now}
 # Fonction pour extraire les objets et champs pertinents
-session = SessionHandler()
+
  
-def estimate_token_count(messages):
-    """
-    Estime approximativement le nombre de tokens utilisés dans une liste de messages.
-    Basé sur une moyenne de 0.75 token par mot (valeur typique pour l'anglais/français).
-    """
-    total_tokens = 0
-    for msg in messages:
-        content = msg.get("content", "")
-        word_count = len(content.split())
-        total_tokens += int(word_count * 0.75) + 4  # +4 pour le rôle / structure
-    return total_tokens
 
 
-session = SessionHandler()
-def extract_relevant_objects(natural_language_query: str, schema: dict) -> dict:
-    session.initialize_if_needed(
-        "Tu es un assistant Salesforce. Résume en une phrase claire ce que l'utilisateur cherche à faire, sans interprétation.\n\n"
-          )
 
-    # Étape 1 - Question de l'utilisateur (en langage naturel seulement)
-    session.append_user_question(natural_language_query)
-    global nb_question
-    nb_question += 1
-    print(nb_question ) 
-    step1_response = openai_client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=session.get_history(),
-        temperature=0.2
-    ).choices[0].message.content.strip()
-
-    print("\n🔎 Étape 1 - Intention résumée :", step1_response)
+def extract_relevant_objects(natural_language_query: str, schema: dict, step1_response:str) -> dict:
 
     # Étape 2 - Identification des objets
     step2_user_prompt = (
@@ -123,6 +57,7 @@ def extract_relevant_objects(natural_language_query: str, schema: dict) -> dict:
         "Ne retourne qu'un JSON strict comme décrit. Si aucun objet n'est valide, retourne une erreur explicite JSON.\n\n"
         f"📥 Intention : {step1_response}\n"
         f"📦 Schéma :\n{json.dumps(schema, indent=2)}\n\n"
+
         "📤 Format attendu :\n"
         "{\n"
         '  "objects": ["Object1__c", "Object2__c"],\n'
@@ -336,9 +271,9 @@ WHERE Account__r.Name LIKE '%Numilog%'
 
     return soql_query
 
-
+current_time = datetime.now()  
 def correct_soql_query(soql_query: str, extracted_data: dict) -> str:
-    current_time = datetime.now()  
+   
     current_date_str = current_time.strftime("%Y-%m-%d")
 
     system_message = f"""
@@ -497,7 +432,6 @@ def evaluate_and_fix_soql_query(soql_query: str) -> dict:
     return json.loads(response.choices[0].message.content.strip())  # Retourne un dict JSON
 
 
-
 def generate_natural_response(nl_query: str, results: list) -> str:
     system_message = (
         "Tu es un assistant expert en reformulation de réponses à partir de données, en langage naturel. "
@@ -511,16 +445,16 @@ def generate_natural_response(nl_query: str, results: list) -> str:
         "**Réponse brute :** Jean Dupont (ID: 1), Chiffre d'affaires : 500000DZD\n"
         "**Réponse reformulée :** Le commercial le plus performant est Jean Dupont, avec un chiffre d'affaires de 500 000 DZD.\n\n"
         "Ne retourne que la réponse reformulée et rien d'autre."
+       " 📅 Date actuelle : {current_date_str}"
     )
 
-    # ✅ Si aucun résultat n'est trouvé
-    if not results:
+    # ✅ Cas vide ou non exploitable
+    if not results or all(not any(v for v in item.values()) for item in results):
         return f"Désolé, je n'ai trouvé aucune information pour '{nl_query}'."
 
-    # ✅ Reformulation dynamique sans supposer des clés spécifiques (ex: 'name', 'id')
+    # ✅ Reformulation avec les 5 premiers résultats
     formatted_results = []
-    for item in results:
-        # Générer une phrase descriptive avec tous les attributs de l'objet
+    for item in results[:5]:
         description = ", ".join(f"{key}: {value}" for key, value in item.items())
         formatted_results.append(f"- {description}")
 
@@ -539,6 +473,7 @@ def generate_natural_response(nl_query: str, results: list) -> str:
     )
 
     return response.choices[0].message.content.strip()
+
 
 
 def execute_soql_query(soql_query: str):
@@ -560,4 +495,3 @@ def execute_soql_query(soql_query: str):
     
 #     except Exception as e:
 #         return {"error": str(e)}
-

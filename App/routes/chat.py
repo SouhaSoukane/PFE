@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from App.config import FILE_PATH
-from App.services.openai_service import load_yaml, refine_soql_query
+from App.services.Query_rewritting import query_rewriter, SessionHandler
+from App.services.approche_decomposition import classify_query_complexity, decompose_complex_query_into_steps, execute_steps_sequentially
+from App.services.openai_service import  load_yaml, refine_soql_query
 from App.services.openai_service import extract_relevant_objects
 from App.services.openai_service import evaluate_and_fix_soql_query
 
@@ -24,7 +26,7 @@ class QueryRequest(BaseModel):
     
      
 schema = load_yaml(FILE_PATH)
-
+session = SessionHandler()
 @router.post("/generate_soql")
 def generate_soql(request: SOQLRequest):
     """Endpoint pour générer une requête SOQL depuis du texte en langage naturel."""
@@ -45,8 +47,9 @@ def generate_soql(request: SOQLRequest):
 import json
 @router.post("/query")
 async def process_natural_language_query(nl_query: NaturalLanguageQuery):
-    extracted_data = extract_relevant_objects(nl_query.query, schema)
-
+    query_rewritten=query_rewriter(nl_query.query, schema,session)
+    extracted_data = extract_relevant_objects(nl_query.query, schema,query_rewritten)
+    
     if not extracted_data["objects"]:
         print("\n❌ Aucun objet pertinent trouvé.")
         return {"error": "Aucun objet pertinent trouvé."}
@@ -82,6 +85,9 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
                 results = []
 
         response = generate_natural_response(nl_query.query, results)
+        session.append_assistant_response(response)
+        print("🧠 Réponse ajoutée à la session :", session.get_history())
+
         return {
                  "response": response,
                  "soql_query":soql_query
@@ -129,6 +135,63 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
 
 
 
+class NaturalLanguageQuery(BaseModel):
+    query: str
+
+@router.post("/soql-from-nl")
+def handle_complex_natural_language_query(nl_input: NaturalLanguageQuery):  # 👈 ici aussi
+    nl_query = nl_input.query   # 👈 récupère le champ "query" proprement
+
+    # Ensuite ton pipeline reste pareil :
+    extracted_data = extract_relevant_objects(nl_query, schema,session)
+    intention = extracted_data.get("intention", nl_query)
+    complexity = classify_query_complexity(intention)
+
+    if complexity == "simple":
+        soql = generate_soql_query(extracted_data)
+        query_model = QueryModel(query=soql)
+        retry_count = 0
+        while retry_count < 3:
+            try:
+                results = get_accounts(query_model)
+                # retry_count= 3
+                break  # ✅ Succès => on sort de la boucle
+            except Exception as e:
+                print(f"❌ Erreur d'exécution (tentative {retry_count + 1}) :", str(e))
+                retry_count += 1
+
+                corrected_soql = refine_soql_query(
+                    extracted_data=extracted_data,
+                    original_soql=query_model.query,
+                    execution_error=str(e)
+                )
+                query_model = QueryModel(query=corrected_soql)
+        else:
+            # 🚨 Toutes les tentatives ont échoué
+            return {"error": "Erreur après plusieurs tentatives d'exécution."}
+
+        # ✅ Résultat valide
+        if isinstance(results, JSONResponse):
+            results = json.loads(results.body.decode())
+            if isinstance(results, dict) and "message" in results:
+                results = [] # ⚠️ tu dois avoir une fonction get_accounts qui exécute
+        return generate_natural_response(nl_query, results)
+
+    elif complexity == "complexe":
+        
+         steps = decompose_complex_query_into_steps(nl_query)
+         results = execute_steps_sequentially(steps, schema)
+         return {"steps": steps, "results": results}
+
+    else:
+        return "Je n'ai pas pu déterminer la complexité de la question."
+
+
+
+
+
+
+
 @router.post("/donne")
 async def data_retrieve(nl_query: NaturalLanguageQuery):
     """
@@ -149,3 +212,25 @@ def extract_objects_endpoint(request: QueryRequest):
     schema = load_yaml(FILE_PATH)
     result = extract_relevant_objects(request.query, schema)
     return result          
+
+
+
+
+
+
+
+
+
+
+
+@router.post("/rewrite")
+def rewrite(natural_query:NaturalLanguageQuery):
+    schema = load_yaml(FILE_PATH)
+    
+
+  
+    try:
+        reformulated = query_rewriter(natural_query.query, schema)
+        return {"rewritten_query": reformulated}
+    except Exception as e:
+        return {"error": str(e)}, 500
