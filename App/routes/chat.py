@@ -109,7 +109,7 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
         return {
             "response": response,
             "soql_query": soql_query,
-            "file":{output_file}
+            "file":[output_file]
             # "dataframe": df.to_dict(orient="records") if df is not None else None  # optionnel
         }
 

@@ -1,47 +1,47 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Nombre total de livraisons effectu\u00e9es chaque jour pendant le mois d'avril 2025.",
+  "description": "Nombre total de livraisons effectu\u00e9es chaque jour durant le mois d'avril 2025.",
   "data": {
     "values": [
       {
-        "expr0": 43,
-        "DeliveryDate__c": "2025-04-10"
+        "DeliveryDate__c": "2025-04-10",
+        "expr0": 43
       },
       {
-        "expr0": 42,
-        "DeliveryDate__c": "2025-04-06"
+        "DeliveryDate__c": "2025-04-06",
+        "expr0": 42
       },
       {
-        "expr0": 39,
-        "DeliveryDate__c": "2025-04-07"
+        "DeliveryDate__c": "2025-04-07",
+        "expr0": 39
       },
       {
-        "expr0": 38,
-        "DeliveryDate__c": "2025-04-08"
+        "DeliveryDate__c": "2025-04-08",
+        "expr0": 38
       },
       {
-        "expr0": 40,
-        "DeliveryDate__c": "2025-04-05"
+        "DeliveryDate__c": "2025-04-05",
+        "expr0": 40
       },
       {
-        "expr0": 45,
-        "DeliveryDate__c": "2025-04-11"
+        "DeliveryDate__c": "2025-04-11",
+        "expr0": 45
       },
       {
-        "expr0": 32,
-        "DeliveryDate__c": "2025-04-09"
+        "DeliveryDate__c": "2025-04-09",
+        "expr0": 32
       },
       {
-        "expr0": 39,
-        "DeliveryDate__c": "2025-04-12"
+        "DeliveryDate__c": "2025-04-12",
+        "expr0": 39
       },
       {
-        "expr0": 43,
-        "DeliveryDate__c": "2025-04-03"
+        "DeliveryDate__c": "2025-04-03",
+        "expr0": 43
       },
       {
-        "expr0": 42,
-        "DeliveryDate__c": "2025-04-04"
+        "DeliveryDate__c": "2025-04-04",
+        "expr0": 42
       }
     ]
   },
@@ -50,12 +50,12 @@
     "x": {
       "field": "DeliveryDate__c",
       "type": "ordinal",
-      "title": "Date de Livraison"
+      "title": "Date de livraison"
     },
     "y": {
       "field": "expr0",
       "type": "quantitative",
-      "title": "Nombre de Livraisons"
+      "title": "Nombre de livraisons"
     }
   }
 }
