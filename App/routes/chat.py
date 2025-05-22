@@ -14,6 +14,8 @@ from App.services.openai_service import NaturalLanguageQuery
 from App.services.openai_service import generate_soql_query
 
 from fastapi.responses import JSONResponse
+
+from App.services.visual_generator import generate_vegalite_spec, improve_temporal_axis, inject_values
 router = APIRouter()
 
 # Modèle pour valider les données envoyées dans le body
@@ -47,9 +49,9 @@ def generate_soql(request: SOQLRequest):
 import json
 @router.post("/query")
 async def process_natural_language_query(nl_query: NaturalLanguageQuery):
-    query_rewritten=query_rewriter(nl_query.query, schema,session)
-    extracted_data = extract_relevant_objects(nl_query.query, schema,query_rewritten)
-    
+    query_rewritten = query_rewriter(nl_query.query, schema, session)
+    extracted_data = extract_relevant_objects(nl_query.query, schema, query_rewritten)
+
     if not extracted_data["objects"]:
         print("\n❌ Aucun objet pertinent trouvé.")
         return {"error": "Aucun objet pertinent trouvé."}
@@ -61,9 +63,8 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
         retry_count = 0
         while retry_count < 3:
             try:
-                results = get_accounts(query_model)
-                # retry_count= 3
-                break  # ✅ Succès => on sort de la boucle
+                result_dict = get_accounts(query_model)  # ✅ récupère un dict avec "json" et "df"
+                break
             except Exception as e:
                 print(f"❌ Erreur d'exécution (tentative {retry_count + 1}) :", str(e))
                 retry_count += 1
@@ -75,26 +76,44 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
                 )
                 query_model = QueryModel(query=corrected_soql)
         else:
-            # 🚨 Toutes les tentatives ont échoué
             return {"error": "Erreur après plusieurs tentatives d'exécution."}
 
-        # ✅ Résultat valide
-        if isinstance(results, JSONResponse):
-            results = json.loads(results.body.decode())
-            if isinstance(results, dict) and "message" in results:
-                results = []
+        json_response = result_dict.get("json")
+        df = result_dict.get("df")  # ✅ dataframe accessible ici si nécessaire
 
-        response = generate_natural_response(nl_query.query, results)
+        if isinstance(json_response, JSONResponse):
+            json_data = json.loads(json_response.body.decode())
+            if isinstance(json_data, dict) and "message" in json_data:
+                json_data = []
+        else:
+            json_data = json_response
+        visuel = generate_vegalite_spec("data frame",df,query_rewritten)
+        full_spec = inject_values(visuel, df)
+        full_spec = improve_temporal_axis(full_spec)
+
+        print("📊 Aperçu des données injectées :")
+        for i, row in enumerate(full_spec["data"]["values"][:5]):
+            print(f"{i+1}. {row}")
+
+        output_file = "vegalite_output.json"
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(full_spec, f, indent=2)
+
+        print(f"\n✅ JSON Vega-Lite sauvegardé dans : {output_file}")
+        print("💡 Ouvre-le sur https://vega.github.io/editor/ pour visualiser le graphe.")
+        response = generate_natural_response(nl_query.query, json_data)
         session.append_assistant_response(response)
         print("🧠 Réponse ajoutée à la session :", session.get_history())
 
         return {
-                 "response": response,
-                 "soql_query":soql_query
-                 }
+            "response": response,
+            "soql_query": soql_query,
+            # "dataframe": df.to_dict(orient="records") if df is not None else None  # optionnel
+        }
 
     except Exception as e:
         return {"error": str(e)}
+
 
 @router.post("/assistant")
 async def assistant_api(nl_query: NaturalLanguageQuery):

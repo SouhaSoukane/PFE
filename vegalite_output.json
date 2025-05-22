@@ -1,0 +1,61 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Nombre de livraisons effectu\u00e9es chaque jour pour le mois d'avril 2025.",
+  "data": {
+    "values": [
+      {
+        "DeliveryDate__c": "2025-04-10",
+        "expr0": 43
+      },
+      {
+        "DeliveryDate__c": "2025-04-06",
+        "expr0": 42
+      },
+      {
+        "DeliveryDate__c": "2025-04-07",
+        "expr0": 39
+      },
+      {
+        "DeliveryDate__c": "2025-04-08",
+        "expr0": 38
+      },
+      {
+        "DeliveryDate__c": "2025-04-05",
+        "expr0": 40
+      },
+      {
+        "DeliveryDate__c": "2025-04-11",
+        "expr0": 45
+      },
+      {
+        "DeliveryDate__c": "2025-04-09",
+        "expr0": 32
+      },
+      {
+        "DeliveryDate__c": "2025-04-12",
+        "expr0": 39
+      },
+      {
+        "DeliveryDate__c": "2025-04-03",
+        "expr0": 43
+      },
+      {
+        "DeliveryDate__c": "2025-04-04",
+        "expr0": 42
+      }
+    ]
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "DeliveryDate__c",
+      "type": "nominal",
+      "title": "Date de Livraison"
+    },
+    "y": {
+      "field": "expr0",
+      "type": "quantitative",
+      "title": "Nombre de Livraisons"
+    }
+  }
+}

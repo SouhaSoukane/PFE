@@ -87,7 +87,7 @@ def get_accounts(query_data: QueryModel):
         # 🔥 Conversion propre via to_json -> JSON compliant
         json_compatible_data = json.loads(df.to_json(orient="records", force_ascii=False))
 
-        return JSONResponse(content=json_compatible_data, status_code=200)
+        return  {"json":JSONResponse(content=json_compatible_data, status_code=200), "df": df}
 
     except SalesforceAuthenticationFailed:
         print("🔑 Échec d'authentification Salesforce, tentative de reconnexion...")
