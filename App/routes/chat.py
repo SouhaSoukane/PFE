@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from App.config import FILE_PATH
@@ -254,3 +255,14 @@ def rewrite(natural_query:NaturalLanguageQuery):
         return {"rewritten_query": reformulated}
     except Exception as e:
         return {"error": str(e)}, 500
+
+
+
+@router.get("/vega/{filename}")
+def get_vega_file(filename: str):
+    file_path = os.path.join("output", filename)  # ← Dossier où tu stockes les fichiers
+    if not os.path.exists(file_path):
+        return JSONResponse(content={"error": "Fichier non trouvé"}, status_code=404)
+    with open(file_path, "r") as f:
+        content = json.load(f)
+    return JSONResponse(content=content)        
