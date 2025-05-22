@@ -260,9 +260,9 @@ def rewrite(natural_query:NaturalLanguageQuery):
 
 @router.get("/vega/{filename}")
 def get_vega_file(filename: str):
-    file_path = os.path.join("output", filename)  # ← Dossier où tu stockes les fichiers
-    if not os.path.exists(file_path):
+    # file_path = os.path.join("output", filename)  # ← Dossier où tu stockes les fichiers
+    if not os.path.exists(filename):
         return JSONResponse(content={"error": "Fichier non trouvé"}, status_code=404)
-    with open(file_path, "r") as f:
+    with open(filename, "r") as f:
         content = json.load(f)
     return JSONResponse(content=content)        
