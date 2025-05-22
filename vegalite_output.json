@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Nombre total de livraisons effectu\u00e9es chaque jour durant le mois d'avril 2025.",
+  "description": "Nombre de livraisons effectu\u00e9es chaque jour du mois d'avril 2025.",
   "data": {
     "values": [
       {
@@ -50,7 +50,7 @@
     "x": {
       "field": "DeliveryDate__c",
       "type": "ordinal",
-      "title": "Date de livraison"
+      "title": "Date"
     },
     "y": {
       "field": "expr0",

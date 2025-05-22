@@ -3,43 +3,56 @@ import json
 from App.config import openai_client  # à adapter selon ton projet
 
 # 🔎 Analyse automatique pour aider le LLM
-def extract_visual_insights(df: pd.DataFrame, max_categories=10) -> dict:
-    columns_meta = {
-        col: (
-            "temporal" if pd.api.types.is_datetime64_any_dtype(df[col]) else
-            "quantitative" if pd.api.types.is_numeric_dtype(df[col]) else
-            "nominal"
-        )
-        for col in df.columns
-    }
+# 🔎 Analyse améliorée des métadonnées
+def extract_visual_insights(df: pd.DataFrame, max_categories: int = 10) -> dict[str, any]:
+    """Extract enhanced metadata about the DataFrame to guide visualization choices."""
+    columns_meta = {}
+    for col in df.columns:
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            columns_meta[col] = "temporal"
+        elif pd.api.types.is_numeric_dtype(df[col]):
+            unique_vals = df[col].nunique()
+            if unique_vals <= 10 and df[col].dtype in ['int64', 'int32']:
+                columns_meta[col] = "ordinal"
+            else:
+                columns_meta[col] = "quantitative"
+        else:
+            unique_vals = df[col].nunique()
+            columns_meta[col] = "nominal"
+
+    quant_stats = {}
+    for col in df.columns:
+        if columns_meta.get(col) == "quantitative":
+            quant_stats[col] = {
+                "min": float(df[col].min()),
+                "max": float(df[col].max()),
+                "mean": float(df[col].mean())
+            }
 
     summary = {
         "row_count": len(df),
         "column_types": columns_meta,
+        "quantitative_stats": quant_stats,
         "distinct_values": {col: df[col].nunique() for col in df.columns},
         "temporal_columns": [col for col, typ in columns_meta.items() if typ == "temporal"],
         "categorical_columns": [col for col, typ in columns_meta.items() if typ == "nominal"],
         "quantitative_columns": [col for col, typ in columns_meta.items() if typ == "quantitative"],
-        "group_densities": {},
-        "sample_categories": {}
+        "sample_data": {col: df[col].dropna().iloc[:5].tolist() for col in df.columns},
+        "sample_categories": {
+            col: df[col].dropna().unique().tolist()[:max_categories]
+            for col in df.columns if columns_meta.get(col) == "nominal"
+        }
     }
 
-    for cat_col in summary["categorical_columns"]:
-        summary["sample_categories"][cat_col] = df[cat_col].dropna().unique().tolist()[:max_categories]
-
-    for cat_col in summary["categorical_columns"]:
-        for time_col in summary["temporal_columns"]:
-            group_counts = df.groupby(cat_col)[time_col].nunique()
-            summary["group_densities"][f"{cat_col} / {time_col}"] = group_counts.to_dict()
-
     return summary
+
 
 # 🧠 Génération du JSON Vega-Lite
 def generate_vegalite_spec(df_name: str, df: pd.DataFrame, user_query: str) -> dict:
     insights = extract_visual_insights(df)
-
+    print("VOICI LES OBJEEEEEEEEEEEEEEEEECT", df_name, df, user_query, insights)
     prompt = f"""
-Tu es un assistant expert en data visualisation.
+Tu es un expert en vegalite.
 
 Voici les métadonnées du DataFrame "{df_name}" :
 

@@ -94,7 +94,6 @@ def get_accounts(query_data: QueryModel):
         refresh_salesforce()
         try:
             result = sf.query(query)
-            records = result.get("records", [])
             return [{k: v for k, v in record.items() if k != "attributes"} for record in records]
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erreur après rafraîchissement : {str(e)}")
