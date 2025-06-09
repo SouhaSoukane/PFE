@@ -1,61 +1,32 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Nombre de livraisons effectu\u00e9es chaque jour du mois d'avril 2025.",
   "data": {
     "values": [
       {
-        "DeliveryDate__c": "2025-04-10",
-        "expr0": 43
-      },
-      {
-        "DeliveryDate__c": "2025-04-06",
-        "expr0": 42
-      },
-      {
-        "DeliveryDate__c": "2025-04-07",
-        "expr0": 39
-      },
-      {
-        "DeliveryDate__c": "2025-04-08",
-        "expr0": 38
-      },
-      {
-        "DeliveryDate__c": "2025-04-05",
-        "expr0": 40
-      },
-      {
-        "DeliveryDate__c": "2025-04-11",
-        "expr0": 45
-      },
-      {
-        "DeliveryDate__c": "2025-04-09",
-        "expr0": 32
-      },
-      {
-        "DeliveryDate__c": "2025-04-12",
-        "expr0": 39
-      },
-      {
-        "DeliveryDate__c": "2025-04-03",
-        "expr0": 43
-      },
-      {
-        "DeliveryDate__c": "2025-04-04",
-        "expr0": 42
+        "expr0": null
       }
     ]
   },
   "mark": "bar",
   "encoding": {
     "x": {
-      "field": "DeliveryDate__c",
-      "type": "ordinal",
-      "title": "Date"
+      "field": "commercial_id",
+      "type": "nominal",
+      "title": "ID du Commercial"
     },
     "y": {
-      "field": "expr0",
+      "aggregate": "sum",
+      "field": "chiffre_affaires",
       "type": "quantitative",
-      "title": "Nombre de livraisons"
+      "title": "Chiffre d'Affaires Total"
     }
-  }
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "commercial_id",
+        "equal": "dernier_commercial_id"
+      }
+    }
+  ]
 }

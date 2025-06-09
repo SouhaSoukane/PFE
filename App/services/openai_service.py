@@ -88,6 +88,7 @@ def extract_relevant_objects(natural_language_query: str, schema: dict, step1_re
     # Étape 3 - Relations et champs
     step3_user_prompt = (
        "Tu es un expert Salesforce. À partir de l’intention utilisateur et des objets extraits du schéma, identifie uniquement les **champs et relations pertinents** pour répondre au besoin.\n"
+    "***retourne toujours l'id***"
     "⚠️ Tu dois te baser uniquement sur les champs et relations **existants dans le schéma**.\n"
     "❗️N’inclus que les éléments directement utiles pour répondre à l’intention, ne liste pas tout ce qui est disponible.\n\n"
     f"🎯 Intention : {step1_response}\n"
@@ -208,10 +209,10 @@ def generate_soql_query(extracted_data: dict) -> str:
 - ❌ N'invente jamais de noms comme `PromotionalPrograms__r` si ce nom n’apparaît pas **exactement** dans la liste des relations enfant de l’objet courant (ex : `POS__c`).
 
 5. 🔍 Si un champ personnalisé est utilisé, **il doit se terminer par `__c`**, et une relation personnalisée par `__r`. Ne fais jamais d’erreur de suffixe.
-
-6. Ne rate aucune information mentionné dans l'intention surtout les valeurs avec quoi tu vas filtré!
-7. 🎯 Ne retourne **que** la requête SOQL **dans un bloc de code `soql`**, sans texte, explication ou caractère en plus.
-8. 🧠 Quand une valeur de filtre est mentionnée (comme un nom, une date, une quantité), elle doit être utilisée dans un `WHERE` clair.
+6. utilise le id dans la requete
+7. Ne rate aucune information mentionné dans l'intention surtout les valeurs avec quoi tu vas filtré!
+8. 🎯 Ne retourne **que** la requête SOQL **dans un bloc de code `soql`**, sans texte, explication ou caractère en plus.
+9. 🧠 Quand une valeur de filtre est mentionnée (comme un nom, une date, une quantité), elle doit être utilisée dans un `WHERE` clair.
    - Ex : "associés à Numilog" implique un filtre sur `Account__r.Name LIKE '%Numilog%'`
 ---
 
@@ -444,6 +445,7 @@ def generate_natural_response(nl_query: str, results: list) -> str:
         "**Question :** Qui est le commercial le plus performant ?\n"
         "**Réponse brute :** Jean Dupont (ID: 1), Chiffre d'affaires : 500000DZD\n"
         "**Réponse reformulée :** Le commercial le plus performant est Jean Dupont, avec un chiffre d'affaires de 500 000 DZD.\n\n"
+        "N'utilise pas l'id sauf si l'utilisateur le demande"
         "Ne retourne que la réponse reformulée et rien d'autre."
        " 📅 Date actuelle : {current_date_str}"
     )
@@ -495,3 +497,20 @@ def execute_soql_query(soql_query: str):
     
 #     except Exception as e:
 #         return {"error": str(e)}
+
+
+
+def needs_visual_output(intention: str) -> bool:
+    prompt = f"""
+Tu es un assistant Salesforce. Analyse la question suivante et dis si l'utilisateur attend un visuel comme un graphique, un tableau, ou un diagramme.
+Réponds uniquement par "oui" ou "non".
+
+Question : {intention}
+"""
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0,
+        max_tokens=10
+    ).choices[0].message.content.strip().lower()
+    return response == "oui"

@@ -1,4 +1,4 @@
-# NOTE : Tous les objets ci-dessous possèdent un champ 'Name' par défaut.
+# NOTE : Tous les objets ci-dessous possèdent un champ 'Name' et un champ 'ID' par défaut.
 Account:
 - Active__c
 - Address__c

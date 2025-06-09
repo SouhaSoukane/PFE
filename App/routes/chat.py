@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from App.config import FILE_PATH
 from App.services.Query_rewritting import query_rewriter, SessionHandler
 from App.services.approche_decomposition import classify_query_complexity, decompose_complex_query_into_steps, execute_steps_sequentially
-from App.services.openai_service import  load_yaml, refine_soql_query
+from App.services.openai_service import  load_yaml, needs_visual_output, refine_soql_query
 from App.services.openai_service import extract_relevant_objects
 from App.services.openai_service import evaluate_and_fix_soql_query
 
@@ -102,13 +102,15 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
 
         print(f"\n✅ JSON Vega-Lite sauvegardé dans : {output_file}")
         print("💡 Ouvre-le sur https://vega.github.io/editor/ pour visualiser le graphe.")
+        needs_visual = needs_visual_output(nl_query.query)
         response = generate_natural_response(nl_query.query, json_data)
-        session.append_assistant_response(response)
+        session.append_assistant_response(response,data=df)
         print("🧠 Réponse ajoutée à la session :", session.get_history())
 
         return {
             "response": response,
             "soql_query": soql_query,
+            "needs_visual": needs_visual,
             "file":[output_file]
             # "dataframe": df.to_dict(orient="records") if df is not None else None  # optionnel
         }
