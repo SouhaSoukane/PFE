@@ -3,30 +3,34 @@
   "data": {
     "values": [
       {
-        "expr0": null
+        "Warehouse__r.Id": "a0iWx000001TO9mIAG",
+        "Warehouse__r.Name": "Entrep\u00f4t Principal - Hayatt Food, EURL"
       }
     ]
-  },
-  "mark": "bar",
-  "encoding": {
-    "x": {
-      "field": "commercial_id",
-      "type": "nominal",
-      "title": "ID du Commercial"
-    },
-    "y": {
-      "aggregate": "sum",
-      "field": "chiffre_affaires",
-      "type": "quantitative",
-      "title": "Chiffre d'Affaires Total"
-    }
   },
   "transform": [
     {
       "filter": {
-        "field": "commercial_id",
-        "equal": "dernier_commercial_id"
+        "field": "DeliveryPersonId",
+        "equal": "003Wx000006WLp3IAG"
       }
     }
-  ]
+  ],
+  "mark": "text",
+  "encoding": {
+    "text": {
+      "field": "Warehouse__r.Name",
+      "type": "nominal"
+    },
+    "tooltip": [
+      {
+        "field": "Warehouse__r.Id",
+        "type": "nominal"
+      },
+      {
+        "field": "Warehouse__r.Name",
+        "type": "nominal"
+      }
+    ]
+  }
 }

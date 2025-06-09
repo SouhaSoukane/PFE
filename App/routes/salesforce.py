@@ -58,13 +58,11 @@ print(cleaned_response)
 class QueryModel(BaseModel):
     query: str
 
-
-
 @router.post("/accounts/")
 def get_accounts(query_data: QueryModel):
     sf = get_sf()  # Récupérer l'instance Salesforce
     try:
-        query = query_data.query  # Récupérer la requête SQL envoyée en JSON
+        query = query_data.query  # Récupérer la requête SOQL
         result = sf.query(query)
         records = result.get("records", [])
 
@@ -72,9 +70,25 @@ def get_accounts(query_data: QueryModel):
             print("🔍 Aucune donnée trouvée dans Salesforce.")
             return JSONResponse(content={"message": "Aucune donnée trouvée"}, status_code=404)
 
-        # Nettoyer les attributs inutiles
-        cleaned_records = [{k: v for k, v in record.items() if k != "attributes"} for record in records]
-        
+        # Nettoyer les attributs inutiles et aplatir les champs imbriqués
+        cleaned_records = []
+        for record in records:
+            cleaned_record = {k: v for k, v in record.items() if k != "attributes"}
+            keys_to_remove = []  # Collecter les clés à supprimer
+            new_fields = {}  # Collecter les nouveaux champs aplatis
+            for key, value in cleaned_record.items():
+                if isinstance(value, dict) and key.endswith('__r'):  # Détecter les relations (ex. Product__r)
+                    for sub_key, sub_value in value.items():
+                        if sub_key != "attributes":  # Ignorer les métadonnées
+                            new_fields[f"{key}.{sub_key}"] = sub_value
+                    keys_to_remove.append(key)  # Marquer la clé pour suppression
+            # Ajouter les nouveaux champs
+            cleaned_record.update(new_fields)
+            # Supprimer les clés marquées après l'itération
+            for key in keys_to_remove:
+                cleaned_record.pop(key, None)
+            cleaned_records.append(cleaned_record)
+
         # Créer le DataFrame
         df = pd.DataFrame(cleaned_records)
 
@@ -82,25 +96,42 @@ def get_accounts(query_data: QueryModel):
             print("🚨 DataFrame vide ! Aucune donnée récupérée.")
             return JSONResponse(content={"message": "Aucune donnée trouvée"}, status_code=404)
 
-        print("\n🔹 Aperçu du DataFrame :\n", df.head())
+        # Affichage unique avec un identifiant pour tracer les appels
+        print(f"\n🔹 Aperçu du DataFrame (appel {id(df)}) :\n", df.head().to_string())
 
-        # 🔥 Conversion propre via to_json -> JSON compliant
+        # Conversion propre en JSON
         json_compatible_data = json.loads(df.to_json(orient="records", force_ascii=False))
 
-        return  {"json":JSONResponse(content=json_compatible_data, status_code=200), "df": df}
+        return {"json": json_compatible_data, "df": df}
 
     except SalesforceAuthenticationFailed:
         print("🔑 Échec d'authentification Salesforce, tentative de reconnexion...")
         refresh_salesforce()
         try:
             result = sf.query(query)
-            return [{k: v for k, v in record.items() if k != "attributes"} for record in records]
+            records = result.get("records", [])
+            cleaned_records = []
+            for record in records:
+                cleaned_record = {k: v for k, v in record.items() if k != "attributes"}
+                keys_to_remove = []
+                new_fields = {}
+                for key, value in cleaned_record.items():
+                    if isinstance(value, dict) and key.endswith('__r'):
+                        for sub_key, sub_value in value.items():
+                            if sub_key != "attributes":
+                                new_fields[f"{key}.{sub_key}"] = sub_value
+                        keys_to_remove.append(key)
+                cleaned_record.update(new_fields)
+                for key in keys_to_remove:
+                    cleaned_record.pop(key, None)
+                cleaned_records.append(cleaned_record)
+            return cleaned_records
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erreur après rafraîchissement : {str(e)}")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur SOQL : {str(e)}")
-
+        
 @router.get("/generate")
 def generate_response(prompt: str):
    

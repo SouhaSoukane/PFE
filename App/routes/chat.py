@@ -1,3 +1,4 @@
+import collections
 import os
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -26,8 +27,10 @@ class SOQLRequest(BaseModel):
 class QueryRequest(BaseModel):
     query: str
 
-    
-     
+
+
+
+
 schema = load_yaml(FILE_PATH)
 session = SessionHandler()
 @router.post("/generate_soql")
@@ -84,10 +87,13 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
 
         if isinstance(json_response, JSONResponse):
             json_data = json.loads(json_response.body.decode())
+             
             if isinstance(json_data, dict) and "message" in json_data:
                 json_data = []
         else:
             json_data = json_response
+            
+        
         visuel = generate_vegalite_spec("data frame",df,query_rewritten)
         full_spec = inject_values(visuel, df)
         full_spec = improve_temporal_axis(full_spec)
@@ -212,23 +218,22 @@ def handle_complex_natural_language_query(nl_input: NaturalLanguageQuery):  # �
 
 
 
-
-
+from fastapi.encoders import jsonable_encoder
 
 @router.post("/donne")
 async def data_retrieve(nl_query: NaturalLanguageQuery):
-    """
-    Prend une requête en langage naturel, génère une requête SOQL, puis retourne les résultats.
-    """
     try:
         soql_query = generate_soql_query(nl_query.query)
-        query_model = QueryModel(query=soql_query)  
+        query_model = QueryModel(query=soql_query)
         results = get_accounts(query_model)
-        return {"soql_query": soql_query, "results": results}
+
+        # Force conversion en JSON safe
+        safe_results = jsonable_encoder(results)
+
+        return {"soql_query": soql_query, "results": safe_results}
+
     except Exception as e:
         return {"error": str(e)}
-          
-
 
 @router.post("/extract_relevant")
 def extract_objects_endpoint(request: QueryRequest):
