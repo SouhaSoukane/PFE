@@ -55,7 +55,8 @@ import json
 async def process_natural_language_query(nl_query: NaturalLanguageQuery):
     query_rewritten = query_rewriter(nl_query.query, schema, session)
     extracted_data = extract_relevant_objects(nl_query.query, schema, query_rewritten)
-
+    output_file = "vegalite_output.json"
+    open(output_file, "w").close()
     if not extracted_data["objects"]:
         print("\n❌ Aucun objet pertinent trouvé.")
         return {"error": "Aucun objet pertinent trouvé."}
@@ -102,7 +103,6 @@ async def process_natural_language_query(nl_query: NaturalLanguageQuery):
         for i, row in enumerate(full_spec["data"]["values"][:5]):
             print(f"{i+1}. {row}")
 
-        output_file = "vegalite_output.json"
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(full_spec, f, indent=2)
 
