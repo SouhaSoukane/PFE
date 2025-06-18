@@ -3,34 +3,34 @@
   "data": {
     "values": [
       {
-        "Warehouse__r.Id": "a0iWx000001TO9mIAG",
-        "Warehouse__r.Name": "Entrep\u00f4t Principal - Hayatt Food, EURL"
+        "expr0": 3899309.3
       }
     ]
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "expr0",
+      "type": "quantitative",
+      "title": "Montant total des factures"
+    },
+    "y": {
+      "field": "date",
+      "type": "temporal",
+      "title": "Date",
+      "timeUnit": "month",
+      "axis": {
+        "format": "%B %Y"
+      }
+    }
   },
   "transform": [
     {
       "filter": {
-        "field": "DeliveryPersonId",
-        "equal": "003Wx000006WLp3IAG"
+        "field": "date",
+        "timeUnit": "month",
+        "equal": "2025-04"
       }
     }
-  ],
-  "mark": "text",
-  "encoding": {
-    "text": {
-      "field": "Warehouse__r.Name",
-      "type": "nominal"
-    },
-    "tooltip": [
-      {
-        "field": "Warehouse__r.Id",
-        "type": "nominal"
-      },
-      {
-        "field": "Warehouse__r.Name",
-        "type": "nominal"
-      }
-    ]
-  }
+  ]
 }

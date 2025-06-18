@@ -27,7 +27,9 @@ class SOQLRequest(BaseModel):
 class QueryRequest(BaseModel):
     query: str
 
-
+class SavedQueryInput(BaseModel):
+    nl: str
+    soql_query: str
 
 
 
@@ -283,3 +285,55 @@ async def reset_context():
     """
     session.reset()
     return {"message": "Contexte réinitialisé avec succès."}
+
+
+@router.post("/savedquery")
+async def process_natural_language_query(payload: SavedQueryInput):
+    nl_query = NaturalLanguageQuery(query=payload.nl)
+    output_file = "vegalite_output.json"
+    open(output_file, "w").close()
+    
+    try:
+        
+        query_model = QueryModel(query=payload.soql_query)
+        result_dict = get_accounts(query_model) 
+        json_response = result_dict.get("json")
+        df = result_dict.get("df")  # ✅ dataframe accessible ici si nécessaire
+
+        if isinstance(json_response, JSONResponse):
+            json_data = json.loads(json_response.body.decode())
+             
+            if isinstance(json_data, dict) and "message" in json_data:
+                json_data = []
+        else:
+            json_data = json_response
+            
+        
+        visuel = generate_vegalite_spec("data frame",df,nl_query)
+        full_spec = inject_values(visuel, df)
+        full_spec = improve_temporal_axis(full_spec)
+
+        print("📊 Aperçu des données injectées :")
+        for i, row in enumerate(full_spec["data"]["values"][:5]):
+            print(f"{i+1}. {row}")
+
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(full_spec, f, indent=2)
+
+        print(f"\n✅ JSON Vega-Lite sauvegardé dans : {output_file}")
+        print("💡 Ouvre-le sur https://vega.github.io/editor/ pour visualiser le graphe.")
+        needs_visual = needs_visual_output(nl_query.query)
+        response = generate_natural_response(nl_query.query, json_data)
+        session.append_assistant_response(response,data=df)
+        print("🧠 Réponse ajoutée à la session :", session.get_history())
+
+        return {
+            "response": response,
+            
+            "needs_visual": needs_visual,
+            "file":[output_file]
+            # "dataframe": df.to_dict(orient="records") if df is not None else None  # optionnel
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
