@@ -126,3 +126,6 @@ def query_rewriter(natural_language_query: str, schema: dict, session:SessionHan
     )
 
     return response.choices[0].message.content.strip()
+
+
+

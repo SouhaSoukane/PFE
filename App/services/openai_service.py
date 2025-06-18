@@ -514,3 +514,5 @@ Question : {intention}
         max_tokens=10
     ).choices[0].message.content.strip().lower()
     return response == "oui"
+
+

@@ -273,3 +273,13 @@ def get_vega_file(filename: str):
     with open(filename, "r") as f:
         content = json.load(f)
     return JSONResponse(content=content)        
+
+
+
+@router.get("/reset_context")
+async def reset_context():
+    """
+    Réinitialise le contexte de la session (historique de messages, prompt système, etc.)
+    """
+    session.reset()
+    return {"message": "Contexte réinitialisé avec succès."}
