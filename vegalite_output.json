@@ -1,36 +1,1026 @@
 {
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "data": {
     "values": [
       {
-        "expr0": 3899309.3
+        "Id": "a03Wx000006QGAaIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1739.83
+      },
+      {
+        "Id": "a03Wx000006QGAbIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2756.08
+      },
+      {
+        "Id": "a03Wx000006QGAcIAO",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1879.29
+      },
+      {
+        "Id": "a03Wx000006QGAjIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1239.86
+      },
+      {
+        "Id": "a03Wx000006QGAlIAO",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 949.8
+      },
+      {
+        "Id": "a03Wx000006QGAmIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 4264.15
+      },
+      {
+        "Id": "a03Wx000006QGApIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1502.42
+      },
+      {
+        "Id": "a03Wx000006QGAqIAO",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 520.6
+      },
+      {
+        "Id": "a03Wx000006QGArIAO",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 10719.37
+      },
+      {
+        "Id": "a03Wx000006QGAuIAO",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 120.03
+      },
+      {
+        "Id": "a03Wx000006QGAxIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2622.56
+      },
+      {
+        "Id": "a03Wx000006QGAzIAO",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2424.33
+      },
+      {
+        "Id": "a03Wx000006QGB1IAO",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 629.32
+      },
+      {
+        "Id": "a03Wx000006QGB3IAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2786.45
+      },
+      {
+        "Id": "a03Wx000006QGB4IAO",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 3063.36
+      },
+      {
+        "Id": "a03Wx000006QGB7IAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2585.58
+      },
+      {
+        "Id": "a03Wx000006QGB8IAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 3689.58
+      },
+      {
+        "Id": "a03Wx000006QGBAIA4",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 7996.47
+      },
+      {
+        "Id": "a03Wx000006QGBBIA4",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1191.6
+      },
+      {
+        "Id": "a03Wx000006QGBCIA4",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2987.66
+      },
+      {
+        "Id": "a03Wx000006QGBDIA4",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 6847.75
+      },
+      {
+        "Id": "a03Wx000006QGBEIA4",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2530.14
+      },
+      {
+        "Id": "a03Wx000006QGBFIA4",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 94.42
+      },
+      {
+        "Id": "a03Wx000006QGBGIA4",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 3106.86
+      },
+      {
+        "Id": "a03Wx000006QGBIIA4",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 12213.09
+      },
+      {
+        "Id": "a03Wx000006QGBLIA4",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 919.24
+      },
+      {
+        "Id": "a03Wx000006QGBQIA4",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2603.43
+      },
+      {
+        "Id": "a03Wx000006QGBRIA4",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 3330.22
+      },
+      {
+        "Id": "a03Wx000006QGBSIA4",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1457.96
+      },
+      {
+        "Id": "a03Wx000006QGBUIA4",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 4618.06
+      },
+      {
+        "Id": "a03Wx000006QGBYIA4",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2256.52
+      },
+      {
+        "Id": "a03Wx000006QGBaIAO",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1277.16
+      },
+      {
+        "Id": "a03Wx000006QGBbIAO",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 501.95
+      },
+      {
+        "Id": "a03Wx000006QGBcIAO",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 4208.82
+      },
+      {
+        "Id": "a03Wx000006QGBeIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 3860.89
+      },
+      {
+        "Id": "a03Wx000006QGBkIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 376.65
+      },
+      {
+        "Id": "a03Wx000006QGBmIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 356.94
+      },
+      {
+        "Id": "a03Wx000006QGBuIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 10078.76
+      },
+      {
+        "Id": "a03Wx000006QGBwIAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1874.52
+      },
+      {
+        "Id": "a03Wx000006QGC1IAO",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 9963.88
+      },
+      {
+        "Id": "a03Wx000006QGC2IAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 667.39
+      },
+      {
+        "Id": "a03Wx000006QGC4IAO",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 3121.62
+      },
+      {
+        "Id": "a03Wx000006QGC5IAO",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 9417.62
+      },
+      {
+        "Id": "a03Wx000006QGC7IAO",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2872.31
+      },
+      {
+        "Id": "a03Wx000006QIqgIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 2127.51
+      },
+      {
+        "Id": "a03Wx000006QIqlIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 150.66
+      },
+      {
+        "Id": "a03Wx000006QIqnIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2145.82
+      },
+      {
+        "Id": "a03Wx000006QIqpIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2894.35
+      },
+      {
+        "Id": "a03Wx000006QIqsIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1771.5
+      },
+      {
+        "Id": "a03Wx000006QIquIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1386.35
+      },
+      {
+        "Id": "a03Wx000006QIqvIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 4626.57
+      },
+      {
+        "Id": "a03Wx000006QIqwIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1584.91
+      },
+      {
+        "Id": "a03Wx000006QIqzIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 8914.62
+      },
+      {
+        "Id": "a03Wx000006QIr4IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 350.34
+      },
+      {
+        "Id": "a03Wx000006QIr5IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 903.51
+      },
+      {
+        "Id": "a03Wx000006QIr8IAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 3834.93
+      },
+      {
+        "Id": "a03Wx000006QIr9IAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1439.6
+      },
+      {
+        "Id": "a03Wx000006QIrAIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3618.05
+      },
+      {
+        "Id": "a03Wx000006QIrEIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2293.92
+      },
+      {
+        "Id": "a03Wx000006QIrFIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1481.12
+      },
+      {
+        "Id": "a03Wx000006QIrHIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 451.98
+      },
+      {
+        "Id": "a03Wx000006QIrJIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 2401.17
+      },
+      {
+        "Id": "a03Wx000006QIrKIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 7991.05
+      },
+      {
+        "Id": "a03Wx000006QIrLIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1880.27
+      },
+      {
+        "Id": "a03Wx000006QIrMIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 3366.92
+      },
+      {
+        "Id": "a03Wx000006QIrOIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2571.7
+      },
+      {
+        "Id": "a03Wx000006QIrRIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1691.36
+      },
+      {
+        "Id": "a03Wx000006QIrSIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 970.29
+      },
+      {
+        "Id": "a03Wx000006QIrUIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2386.03
+      },
+      {
+        "Id": "a03Wx000006QIrVIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 119.31
+      },
+      {
+        "Id": "a03Wx000006QIrWIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1273.71
+      },
+      {
+        "Id": "a03Wx000006QIrXIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1365.0
+      },
+      {
+        "Id": "a03Wx000006QIrbIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 5910.65
+      },
+      {
+        "Id": "a03Wx000006QIrcIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2371.71
+      },
+      {
+        "Id": "a03Wx000006QIreIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1752.18
+      },
+      {
+        "Id": "a03Wx000006QIriIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1581.14
+      },
+      {
+        "Id": "a03Wx000006QIrmIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 3336.93
+      },
+      {
+        "Id": "a03Wx000006QIrnIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 951.6
+      },
+      {
+        "Id": "a03Wx000006QIroIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 514.56
+      },
+      {
+        "Id": "a03Wx000006QIrsIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2688.31
+      },
+      {
+        "Id": "a03Wx000006QIruIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2097.55
+      },
+      {
+        "Id": "a03Wx000006QIrvIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 823.92
+      },
+      {
+        "Id": "a03Wx000006QIrwIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 562.05
+      },
+      {
+        "Id": "a03Wx000006QIrxIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 4328.31
+      },
+      {
+        "Id": "a03Wx000006QIryIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2712.76
+      },
+      {
+        "Id": "a03Wx000006QIs1IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 8332.5
+      },
+      {
+        "Id": "a03Wx000006QIs2IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 4391.57
+      },
+      {
+        "Id": "a03Wx000006QIs6IAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 253.28
+      },
+      {
+        "Id": "a03Wx000006QIs7IAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2915.21
+      },
+      {
+        "Id": "a03Wx000006QIs9IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 712.05
+      },
+      {
+        "Id": "a03Wx000006QIsAIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1573.3
+      },
+      {
+        "Id": "a03Wx000006QIsBIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 4258.45
+      },
+      {
+        "Id": "a03Wx000006QIsEIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 789.78
+      },
+      {
+        "Id": "a03Wx000006QIsGIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 3295.75
+      },
+      {
+        "Id": "a03Wx000006QIsJIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1943.86
+      },
+      {
+        "Id": "a03Wx000006QIsKIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 5294.13
+      },
+      {
+        "Id": "a03Wx000006QIsMIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2228.16
+      },
+      {
+        "Id": "a03Wx000006QIsNIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3346.38
+      },
+      {
+        "Id": "a03Wx000006QIsUIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 842.36
+      },
+      {
+        "Id": "a03Wx000006QIsVIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 308.15
+      },
+      {
+        "Id": "a03Wx000006QIsWIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3225.38
+      },
+      {
+        "Id": "a03Wx000006QIsXIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1018.38
+      },
+      {
+        "Id": "a03Wx000006QIscIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 3001.54
+      },
+      {
+        "Id": "a03Wx000006QIsdIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 7391.88
+      },
+      {
+        "Id": "a03Wx000006QIseIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2846.47
+      },
+      {
+        "Id": "a03Wx000006QIsfIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2670.84
+      },
+      {
+        "Id": "a03Wx000006QIsiIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 79.84
+      },
+      {
+        "Id": "a03Wx000006QIsjIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 779.73
+      },
+      {
+        "Id": "a03Wx000006QIsmIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 3492.62
+      },
+      {
+        "Id": "a03Wx000006QIsnIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 2806.69
+      },
+      {
+        "Id": "a03Wx000006QIsqIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 469.48
+      },
+      {
+        "Id": "a03Wx000006QIsuIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 239.12
+      },
+      {
+        "Id": "a03Wx000006QIsvIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 376.65
+      },
+      {
+        "Id": "a03Wx000006QIswIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 3999.07
+      },
+      {
+        "Id": "a03Wx000006QIsyIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1171.75
+      },
+      {
+        "Id": "a03Wx000006QIszIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1581.14
+      },
+      {
+        "Id": "a03Wx000006QIt0IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2804.68
+      },
+      {
+        "Id": "a03Wx000006QIt1IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 4689.6
+      },
+      {
+        "Id": "a03Wx000006QIt3IAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 401.56
+      },
+      {
+        "Id": "a03Wx000006QIt4IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 3748.38
+      },
+      {
+        "Id": "a03Wx000006QIt5IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1276.38
+      },
+      {
+        "Id": "a03Wx000006QIt6IAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1321.11
+      },
+      {
+        "Id": "a03Wx000006QIt7IAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1220.41
+      },
+      {
+        "Id": "a03Wx000006QItAIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 230.25
+      },
+      {
+        "Id": "a03Wx000006QItBIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 4903.39
+      },
+      {
+        "Id": "a03Wx000006QItDIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2596.65
+      },
+      {
+        "Id": "a03Wx000006QItEIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2194.96
+      },
+      {
+        "Id": "a03Wx000006QItGIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2731.09
+      },
+      {
+        "Id": "a03Wx000006QItIIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2624.44
+      },
+      {
+        "Id": "a03Wx000006QItJIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2273.84
+      },
+      {
+        "Id": "a03Wx000006QItLIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 6175.04
+      },
+      {
+        "Id": "a03Wx000006QItPIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 4542.41
+      },
+      {
+        "Id": "a03Wx000006QItQIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 854.82
+      },
+      {
+        "Id": "a03Wx000006QItRIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 2625.47
+      },
+      {
+        "Id": "a03Wx000006QItTIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 3970.15
+      },
+      {
+        "Id": "a03Wx000006QItUIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2765.88
+      },
+      {
+        "Id": "a03Wx000006QItWIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1337.16
+      },
+      {
+        "Id": "a03Wx000006QItYIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2271.45
+      },
+      {
+        "Id": "a03Wx000006QItZIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1814.23
+      },
+      {
+        "Id": "a03Wx000006QItbIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2353.78
+      },
+      {
+        "Id": "a03Wx000006QItcIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2859.03
+      },
+      {
+        "Id": "a03Wx000006QItdIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 7376.91
+      },
+      {
+        "Id": "a03Wx000006QIteIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1274.85
+      },
+      {
+        "Id": "a03Wx000006QItiIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 230.04
+      },
+      {
+        "Id": "a03Wx000006QItjIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 283.26
+      },
+      {
+        "Id": "a03Wx000006QItkIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 372.4
+      },
+      {
+        "Id": "a03Wx000006QItmIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 9272.58
+      },
+      {
+        "Id": "a03Wx000006QItnIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 7389.56
+      },
+      {
+        "Id": "a03Wx000006QItoIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1291.35
+      },
+      {
+        "Id": "a03Wx000006QItqIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 8632.6
+      },
+      {
+        "Id": "a03Wx000006QItrIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 1732.22
+      },
+      {
+        "Id": "a03Wx000006QItsIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 893.76
+      },
+      {
+        "Id": "a03Wx000006QIttIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 645.14
+      },
+      {
+        "Id": "a03Wx000006QItuIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 1663.25
+      },
+      {
+        "Id": "a03Wx000006QItyIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 315.34
+      },
+      {
+        "Id": "a03Wx000006QItzIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 3554.72
+      },
+      {
+        "Id": "a03Wx000006QIu3IAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 3440.36
+      },
+      {
+        "Id": "a03Wx000006QIu4IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1432.35
+      },
+      {
+        "Id": "a03Wx000006QIu5IAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 2654.05
+      },
+      {
+        "Id": "a03Wx000006QIu7IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1393.94
+      },
+      {
+        "Id": "a03Wx000006QIu9IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 4572.15
+      },
+      {
+        "Id": "a03Wx000006QIuCIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 2921.44
+      },
+      {
+        "Id": "a03Wx000006QIuDIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 446.85
+      },
+      {
+        "Id": "a03Wx000006QIuEIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1342.98
+      },
+      {
+        "Id": "a03Wx000006QIuHIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2287.3
+      },
+      {
+        "Id": "a03Wx000006QIuIIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 301.32
+      },
+      {
+        "Id": "a03Wx000006QIuJIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2488.09
+      },
+      {
+        "Id": "a03Wx000006QIuKIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 8181.62
+      },
+      {
+        "Id": "a03Wx000006QIuMIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 6705.88
+      },
+      {
+        "Id": "a03Wx000006QIuNIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2038.46
+      },
+      {
+        "Id": "a03Wx000006QIuOIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 854.82
+      },
+      {
+        "Id": "a03Wx000006QIuWIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2429.82
+      },
+      {
+        "Id": "a03Wx000006QIuYIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2646.35
+      },
+      {
+        "Id": "a03Wx000006QIuaIAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1352.48
+      },
+      {
+        "Id": "a03Wx000006QIufIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3252.61
+      },
+      {
+        "Id": "a03Wx000006QIuhIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2900.52
+      },
+      {
+        "Id": "a03Wx000006QIunIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 298.44
+      },
+      {
+        "Id": "a03Wx000006QIuoIAG",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 5201.74
+      },
+      {
+        "Id": "a03Wx000006QIuqIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3696.68
+      },
+      {
+        "Id": "a03Wx000006QIusIAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 4367.32
+      },
+      {
+        "Id": "a03Wx000006QIutIAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 8892.15
+      },
+      {
+        "Id": "a03Wx000006QIuwIAG",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 5154.96
+      },
+      {
+        "Id": "a03Wx000006QIv2IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 159.68
+      },
+      {
+        "Id": "a03Wx000006QIv4IAG",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 3874.67
+      },
+      {
+        "Id": "a03Wx000006QIv5IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 2998.23
+      },
+      {
+        "Id": "a03Wx000006QIv6IAG",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1740.74
+      },
+      {
+        "Id": "a03Wx000006QIv7IAG",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 1415.97
+      },
+      {
+        "Id": "a03Wx000006QIvDIAW",
+        "DeliveryDate__c": "2025-04-08",
+        "Total__c": 1655.75
+      },
+      {
+        "Id": "a03Wx000006QIvFIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 2916.75
+      },
+      {
+        "Id": "a03Wx000006QIvGIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 5409.92
+      },
+      {
+        "Id": "a03Wx000006QIvKIAW",
+        "DeliveryDate__c": "2025-04-07",
+        "Total__c": 837.9
+      },
+      {
+        "Id": "a03Wx000006QIvOIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 4433.94
+      },
+      {
+        "Id": "a03Wx000006QIvPIAW",
+        "DeliveryDate__c": "2025-04-05",
+        "Total__c": 570.96
+      },
+      {
+        "Id": "a03Wx000006QIvQIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2540.6
+      },
+      {
+        "Id": "a03Wx000006QIvSIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 2174.14
+      },
+      {
+        "Id": "a03Wx000006QIvTIAW",
+        "DeliveryDate__c": "2025-04-06",
+        "Total__c": 1711.72
+      },
+      {
+        "Id": "a03Wx000006QIvUIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 728.8
+      },
+      {
+        "Id": "a03Wx000006QIvXIAW",
+        "DeliveryDate__c": "2025-04-10",
+        "Total__c": 7327.26
       }
     ]
   },
   "mark": "bar",
   "encoding": {
     "x": {
-      "field": "expr0",
-      "type": "quantitative",
-      "title": "Montant total des factures"
+      "field": "DeliveryDate__c",
+      "type": "temporal",
+      "title": "Date de livraison",
+      "axis": {
+        "labelAngle": -45,
+        "format": "%Y-%m-%d"
+      }
     },
     "y": {
-      "field": "date",
-      "type": "temporal",
-      "title": "Date",
-      "timeUnit": "month",
-      "axis": {
-        "format": "%B %Y"
+      "field": "Total__c",
+      "type": "quantitative",
+      "title": "Revenus des livraisons (DZD)"
+    },
+    "tooltip": [
+      {
+        "field": "DeliveryDate__c",
+        "type": "temporal",
+        "title": "Date",
+        "format": "%Y-%m-%d"
+      },
+      {
+        "field": "Total__c",
+        "type": "quantitative",
+        "title": "Revenus (DZD)"
       }
-    }
-  },
-  "transform": [
-    {
-      "filter": {
-        "field": "date",
-        "timeUnit": "month",
-        "equal": "2025-04"
-      }
-    }
-  ]
+    ]
+  }
 }

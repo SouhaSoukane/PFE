@@ -48,26 +48,65 @@ def extract_visual_insights(df: pd.DataFrame, max_categories: int = 10) -> dict[
 
 
 # 🧠 Génération du JSON Vega-Lite
+import json
+
 def generate_vegalite_spec(df_name: str, df: pd.DataFrame, user_query: str) -> dict:
     insights = extract_visual_insights(df)
-    print("VOICI LES OBJEEEEEEEEEEEEEEEEECT", df_name, df, user_query, insights)
+
     prompt = f"""
-Tu es un expert en vegalite.
+Tu es un expert en visualisation de données utilisant Vega-Lite v6.
 
-Voici les métadonnées du DataFrame "{df_name}" :
+Ta mission est de générer un objet JSON Vega-Lite **valide et minimal**, basé sur :
+1. Les métadonnées du DataFrame "{df_name}".
+2. La demande de l'utilisateur.
 
-Résumé :
+---
+
+🎯 Objectif :
+- Produire un graphique clair, professionnel et lisible.
+- Les axes doivent avoir des **titres explicites** (ex. : "Date", "Montant total des commandes").
+- Tous les textes doivent être propres et sans jargon technique ("Sum of", "Average of"... interdits).
+
+
+📌 **Contraintes obligatoires** :
+- Ne retourne **que** un JSON **strictement valide** (aucun texte autour, aucun commentaire).
+- Utilise `"data": {{"name": "source"}}` pour référencer les données.
+- Choisis un **type de graphique pertinent** :
+  - Si la requête contient les mots "évolution", "tendance", "courbe", ou "dans le temps", utilise `"mark": {{"type": "line", "point": true}}`.
+  - Si elle contient "comparaison", "par catégorie", ou des noms de colonnes non temporelles, utilise `"bar"`.
+
+---
+
+📅 **Cas spécifiques liés au temps** :
+- Si l'utilisateur mentionne "par semaine" ou "par mois" :
+  - **Agrège les données** sur cette période avec `timeUnit` (ex. `"timeUnit": "yearweek"` ou `"yearmonth"`).
+  - Affiche la **date de début de chaque période** sur l'axe X.
+  - Affiche la **date de début de chaque période** sur l'axe X.
+- L'axe X doit utiliser `"type": "temporal"` si c’est une date.
+
+- L'axe Y doit utiliser une **somme ou moyenne** sur une colonne quantitative, selon le contexte.
+
+---
+
+🎨 **Recommandations d'encodage** :
+- L’axe X = champ temporel, avec `labelAngle: -45`, `format: "%Y-%m-%d"`.
+- L’axe Y = champ quantitatif (`montant total des ventes` par exemple).
+- Ajoute toujours un `tooltip` contenant la date et la valeur.
+
+---
+
+📊 **Méta-infos disponibles** :
 {json.dumps(insights, indent=2)}
 
-L'utilisateur a demandé : "{user_query}"
+🔍 **Demande utilisateur** :
+"{user_query}"
 
-À partir de ces informations, génère un objet JSON conforme à Vega-Lite v6.
-⚠️ N'inclus pas les données. Utilise `"data": {{"name": "source"}}`.
-Retourne uniquement le JSON sans commentaire ni texte autour.
-    """
+Génère maintenant un objet JSON Vega-Lite v6 **valide et minimal**.
+"""
+
 
     response = openai_client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2
     )
@@ -75,7 +114,8 @@ Retourne uniquement le JSON sans commentaire ni texte autour.
     content = response.choices[0].message.content.strip()
 
     try:
-        json_str = content[content.index("{"): content.rindex("}")+1]
+        # Nettoyage au cas où du texte aurait été rajouté autour du JSON
+        json_str = content[content.index("{"): content.rindex("}") + 1]
         return json.loads(json_str)
     except Exception as e:
         return {"error": f"Erreur de parsing : {e}", "raw": content}
@@ -94,7 +134,7 @@ def improve_temporal_axis(spec: dict) -> dict:
         x_encoding = spec.get("encoding", {}).get("x", {})
         if x_encoding.get("type") == "temporal":
             x_encoding.setdefault("axis", {})
-            x_encoding["axis"]["format"] = "%Y-%m"
+            x_encoding["axis"]["format"] = "%Y-%m-%d"
             x_encoding["axis"]["labelAngle"] = -45
     except Exception as e:
         print("⚠️ Erreur dans le formatage de l'axe X :", e)
