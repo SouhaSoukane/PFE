@@ -67,7 +67,7 @@ def get_accounts(query_data: QueryModel):
         records = result.get("records", [])
 
         if not records:
-            print("🔍 Aucune donnée trouvée dans Salesforce.")
+            print(" Aucune donnée trouvée dans Salesforce.")
             return JSONResponse(content={"message": "Aucune donnée trouvée"}, status_code=404)
 
         # Nettoyer les attributs inutiles et aplatir les champs imbriqués
@@ -93,11 +93,11 @@ def get_accounts(query_data: QueryModel):
         df = pd.DataFrame(cleaned_records)
 
         if df.empty:
-            print("🚨 DataFrame vide ! Aucune donnée récupérée.")
+            print(" DataFrame vide ! Aucune donnée récupérée.")
             return JSONResponse(content={"message": "Aucune donnée trouvée"}, status_code=404)
 
         # Affichage unique avec un identifiant pour tracer les appels
-        print(f"\n🔹 Aperçu du DataFrame (appel {id(df)}) :\n", df.head().to_string())
+        print(f"\n Aperçu du DataFrame (appel {id(df)}) :\n", df.head().to_string())
 
         # Conversion propre en JSON
         json_compatible_data = json.loads(df.to_json(orient="records", force_ascii=False))
@@ -105,7 +105,7 @@ def get_accounts(query_data: QueryModel):
         return {"json": json_compatible_data, "df": df}
 
     except SalesforceAuthenticationFailed:
-        print("🔑 Échec d'authentification Salesforce, tentative de reconnexion...")
+        print(" Échec d'authentification Salesforce, tentative de reconnexion...")
         refresh_salesforce()
         try:
             result = sf.query(query)

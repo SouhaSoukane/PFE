@@ -2,8 +2,8 @@ import pandas as pd
 import json
 from App.config import openai_client  # à adapter selon ton projet
 
-# 🔎 Analyse automatique pour aider le LLM
-# 🔎 Analyse améliorée des métadonnées
+#  Analyse automatique pour aider le LLM
+#  Analyse améliorée des métadonnées
 def extract_visual_insights(df: pd.DataFrame, max_categories: int = 10) -> dict[str, any]:
     """Extract enhanced metadata about the DataFrame to guide visualization choices."""
     columns_meta = {}
@@ -47,7 +47,7 @@ def extract_visual_insights(df: pd.DataFrame, max_categories: int = 10) -> dict[
     return summary
 
 
-# 🧠 Génération du JSON Vega-Lite
+#  Génération du JSON Vega-Lite
 import json
 
 def generate_vegalite_spec(df_name: str, df: pd.DataFrame, user_query: str) -> dict:
@@ -62,13 +62,13 @@ Ta mission est de générer un objet JSON Vega-Lite **valide et minimal**, basé
 
 ---
 
-🎯 Objectif :
+ Objectif :
 - Produire un graphique clair, professionnel et lisible.
 - Les axes doivent avoir des **titres explicites** (ex. : "Date", "Montant total des commandes").
 - Tous les textes doivent être propres et sans jargon technique ("Sum of", "Average of"... interdits).
 
 
-📌 **Contraintes obligatoires** :
+ **Contraintes obligatoires** :
 - Ne retourne **que** un JSON **strictement valide** (aucun texte autour, aucun commentaire).
 - Utilise `"data": {{"name": "source"}}` pour référencer les données.
 - Choisis un **type de graphique pertinent** :
@@ -77,7 +77,7 @@ Ta mission est de générer un objet JSON Vega-Lite **valide et minimal**, basé
 
 ---
 
-📅 **Cas spécifiques liés au temps** :
+ **Cas spécifiques liés au temps** :
 - Si l'utilisateur mentionne "par semaine" ou "par mois" :
   - **Agrège les données** sur cette période avec `timeUnit` (ex. `"timeUnit": "yearweek"` ou `"yearmonth"`).
   - Affiche la **date de début de chaque période** sur l'axe X.
@@ -88,17 +88,17 @@ Ta mission est de générer un objet JSON Vega-Lite **valide et minimal**, basé
 
 ---
 
-🎨 **Recommandations d'encodage** :
+ **Recommandations d'encodage** :
 - L’axe X = champ temporel, avec `labelAngle: -45`, `format: "%Y-%m-%d"`.
 - L’axe Y = champ quantitatif (`montant total des ventes` par exemple).
 - Ajoute toujours un `tooltip` contenant la date et la valeur.
 
 ---
 
-📊 **Méta-infos disponibles** :
+ **Méta-infos disponibles** :
 {json.dumps(insights, indent=2)}
 
-🔍 **Demande utilisateur** :
+ **Demande utilisateur** :
 "{user_query}"
 
 Génère maintenant un objet JSON Vega-Lite v6 **valide et minimal**.
@@ -120,7 +120,7 @@ Génère maintenant un objet JSON Vega-Lite v6 **valide et minimal**.
     except Exception as e:
         return {"error": f"Erreur de parsing : {e}", "raw": content}
 
-# 🧩 Injection des données
+#  Injection des données
 def inject_values(spec: dict, df: pd.DataFrame) -> dict:
     df_copy = df.copy()
     for col in df_copy.select_dtypes(include=["datetime"]):
@@ -128,7 +128,7 @@ def inject_values(spec: dict, df: pd.DataFrame) -> dict:
     spec["data"] = {"values": df_copy.to_dict(orient="records")}
     return spec
 
-# ✅ Correction du format de l’axe temporel
+#  Correction du format de l’axe temporel
 def improve_temporal_axis(spec: dict) -> dict:
     try:
         x_encoding = spec.get("encoding", {}).get("x", {})
@@ -137,10 +137,10 @@ def improve_temporal_axis(spec: dict) -> dict:
             x_encoding["axis"]["format"] = "%Y-%m-%d"
             x_encoding["axis"]["labelAngle"] = -45
     except Exception as e:
-        print("⚠️ Erreur dans le formatage de l'axe X :", e)
+        print(" Erreur dans le formatage de l'axe X :", e)
     return spec
 
-# # 🚀 Point d’entrée
+# #  Point d’entrée
 # if __name__ == "__main__":
 #     df_name = "large_sales_dataset"
 #     df = pd.read_csv("C:/Users/Fatma/Downloads/multi_dimensional_sales_dataset.csv")
@@ -149,17 +149,17 @@ def improve_temporal_axis(spec: dict) -> dict:
 #     user_query = "Montre l’évolution des ventes totales par produit et par région, en séparant les résultats par canal de vente."
 
 #     base_spec = generate_vegalite_spec(df_name, df, user_query)
-#     print("🧠 JSON généré par le LLM (avant injection des données) :\n")
+#     print(" JSON généré par le LLM (avant injection des données) :\n")
 #     print(json.dumps(base_spec, indent=2))
 
 #     if "error" in base_spec:
-#         print("❌ Erreur :", base_spec["error"])
-#         print("🔎 Réponse brute :", base_spec["raw"])
+#         print(" Erreur :", base_spec["error"])
+#         print(" Réponse brute :", base_spec["raw"])
 #     else:
 #         full_spec = inject_values(base_spec, df)
 #         full_spec = improve_temporal_axis(full_spec)
 
-#         print("📊 Aperçu des données injectées :")
+#         print(" Aperçu des données injectées :")
 #         for i, row in enumerate(full_spec["data"]["values"][:5]):
 #             print(f"{i+1}. {row}")
 
@@ -167,5 +167,5 @@ def improve_temporal_axis(spec: dict) -> dict:
 #         with open(output_file, "w", encoding="utf-8") as f:
 #             json.dump(full_spec, f, indent=2)
 
-#         print(f"\n✅ JSON Vega-Lite sauvegardé dans : {output_file}")
-#         print("💡 Ouvre-le sur https://vega.github.io/editor/ pour visualiser le graphe.")
+#         print(f"\n JSON Vega-Lite sauvegardé dans : {output_file}")
+#         print(" Ouvre-le sur https://vega.github.io/editor/ pour visualiser le graphe.")

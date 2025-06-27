@@ -356,8 +356,8 @@ Unloading__c:
 - 'Source__c > Slot__c (child: SourceUnloadings)'
 - Status__c
 User:
-  - Contact > Contact
-   - 'child: Users '
+- Contact > Contact
+- 'child: Users '
 UserTerritoryAssignement__c:
 - 'child: UserTerritoryAssignment'
 - Territory__c > Territory__c

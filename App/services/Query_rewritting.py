@@ -60,7 +60,7 @@ class SessionHandler:
         if data is not None:
             # Convertir un extrait du dataframe en JSON (par exemple, les 5 premières lignes)
             data_json = data.head(5).to_dict(orient="records")  # Limiter l'extrait à 5 lignes
-            data_text = f"📊 Résumé des données : {json.dumps(data_json, indent=2, ensure_ascii=False)}"
+            data_text = f" Résumé des données : {json.dumps(data_json, indent=2, ensure_ascii=False)}"
             self.messages.append({"role": "assistant", "content": data_text})
     def get_history(self):
         return self.messages
@@ -96,7 +96,7 @@ def query_rewriter(natural_language_query: str, schema: dict, session:SessionHan
         "Tu fais le mapping entre les mots-clés de la question et les objets/champs du schéma, "
         "mais sans exposer cela comme du code. Reformule uniquement la question de façon explicite, non ambigüe, et orientée résultat.\n\n"
 
-        "⚠️ Utilise un ton direct, sans formules de politesse. Reformule chaque question comme une instruction claire.\n\n"
+        " Utilise un ton direct, sans formules de politesse. Reformule chaque question comme une instruction claire.\n\n"
 
         "Voici un exemple de comportement attendu :\n"
         "- Q1 : Quel est le produit le moins cher ?\n"
@@ -112,8 +112,8 @@ def query_rewriter(natural_language_query: str, schema: dict, session:SessionHan
         "- Q2 : Quelle est sa date d’échéance ?\n"
         "- R2 : Donne-moi la date d’échéance de la facture avec l'ID abcdef.\n\n"
 
-        f"📦 Schéma :\n{json.dumps(schema, indent=2)}\n"
-        f"📥 Question : {natural_language_query}\n"
+        f" Schéma :\n{json.dumps(schema, indent=2)}\n"
+        f" Question : {natural_language_query}\n"
     )
 
     session.append_user_question(natural_language_query)
